@@ -54,7 +54,6 @@
     padding-left: 10px;
     padding-right: 10px;
     vertical-align: middle;
-    float: right;
   }
   .nav-side-menu ul .active,
   .nav-side-menu li .active {
@@ -165,7 +164,7 @@
     font-family: Oswald, sans-serif;
   }
 
-  #remove-section, #remove-category{
+  #remove-section, #remove-category, #remove-subject{
     margin-left: 7px;
     color: #ffc69d96;
     cursor: pointer;
@@ -193,8 +192,12 @@
   }
 
   .alert-warning-section {
-    background: #ffdea3;
-    box-shadow: 0px 0px 5px #ada7a7;
+    background: #ffe3b1a3;
+    box-shadow: 0px 0px 3px #ada7a7a6;
+    border: 1px solid #a252133b !important;
+    margin-top: 20px;
+    padding: 5px 25px !important;
+    color: #942808b0;
   }
 
   .btn-success-section{
@@ -217,3 +220,52 @@
     font-size: 12px !important;
   }
 
+  .span-attribute{
+    font-size: 12px;
+    margin-left: 25px;
+    color: #676767ed;
+  }
+
+  .file-input{
+    border: none !important;
+    margin-left: 0px;
+    background-color: #ff000000 !important;
+  }
+
+  .input-radio-attribute{
+    display: inline-block !important;
+    width: 15px !important;
+    height: 12px !important;
+  }
+
+  .input-radio-attribute:focus{
+    box-shadow: none !important;
+  }
+
+  .create-button{
+    color: #4eaf90;
+    border-radius: 3px;
+    border: 1px solid;
+    padding: 3px 20px;
+    background: #00ff4e1c;
+    box-shadow: 1px 1px 1px #80808036;
+  }
+
+
+  .atr-st{
+    border: 1px solid #8080803b;
+    border-radius: 4px;
+    box-shadow: 0px 0px 3px #a9a9a95e inset;
+    padding: 7px;
+    margin: 7px;
+    margin-left: 20px !important;
+  }
+
+  .atr-st li{
+    margin-left: 20px;
+    font-size: 12px;
+    color: #2b88abbd;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+
+  }

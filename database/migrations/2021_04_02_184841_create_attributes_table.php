@@ -35,8 +35,11 @@ class CreateAttributesTable extends Migration
                 /* --- Описание атрибута --- */ 
             $table->string('attribute_description', 300)->nullable();
 
-                /* --- Время --- */
-            $table->time('attribute_time')->nullable();
+                /* --- Время начало --- */
+            $table->time('attribute_time_first')->nullable();
+
+                /* --- Время окончание--- */
+            $table->time('attribute_time_second')->nullable();
 
                 /* --- Число --- */
             $table->integer('attribute_int')->nullable();

@@ -30,6 +30,11 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['aut
     Route::post('/remove_section', [App\Http\Controllers\Admin\DashboardController::class, 'remove_section'])->name('admin.remove_section');
     Route::post('/create_category', [App\Http\Controllers\Admin\DashboardController::class, 'create_category'])->name('admin.create_category');
     Route::post('/remove_category', [App\Http\Controllers\Admin\DashboardController::class, 'remove_category'])->name('admin.remove_category');
+    Route::post('/create_subject', [App\Http\Controllers\Admin\DashboardController::class, 'create_subject'])->name('admin.create_subject');
+    Route::get('/category_data', [App\Http\Controllers\Admin\DashboardController::class, 'category_data'])->name('admin.category_data');
+    Route::post('/create_attribute', [App\Http\Controllers\Admin\DashboardController::class, 'create_attribute'])->name('admin.create_attribute');
+    Route::get('/attributes_data', [App\Http\Controllers\Admin\DashboardController::class, 'attributes_data'])->name('admin.attributes_data');
+    
 });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
