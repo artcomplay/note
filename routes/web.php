@@ -34,6 +34,9 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['aut
     Route::get('/category_data', [App\Http\Controllers\Admin\DashboardController::class, 'category_data'])->name('admin.category_data');
     Route::post('/create_attribute', [App\Http\Controllers\Admin\DashboardController::class, 'create_attribute'])->name('admin.create_attribute');
     Route::get('/attributes_data', [App\Http\Controllers\Admin\DashboardController::class, 'attributes_data'])->name('admin.attributes_data');
+    Route::post('/edit_section', [App\Http\Controllers\Admin\DashboardController::class, 'edit_section'])->name('admin.edit_section');
+    Route::post('/edit_category', [App\Http\Controllers\Admin\DashboardController::class, 'edit_category'])->name('admin.edit_category');
+    Route::post('/edit_subject', [App\Http\Controllers\Admin\DashboardController::class, 'edit_subject'])->name('admin.edit_subject');
     
 });
 

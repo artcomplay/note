@@ -163,6 +163,18 @@ class DashboardController extends Controller
         }
     }
 
+    public function edit_section(Request $request){
+        return $request;
+    }
+
+    public function edit_category(Request $request){
+        return $request;
+    }
+
+    public function edit_subject(Request $request){
+        return $request;
+    }
+
 }
 
 
