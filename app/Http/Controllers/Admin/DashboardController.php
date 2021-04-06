@@ -53,7 +53,47 @@ class DashboardController extends Controller
         }
     }
 
+    public function get_section_name(Request $request){
+        if($request->ajax()){
+            if (Auth::user()){
+                $user_id = Auth::user()->id;
+                $section = DB::table('sections')->where([
+                    ['id', '=', $request->sectionID],
+                    ['user_id', '=', $user_id],
+                ])->get();
 
+                return $section;
+            }
+        }
+    }
+
+    public function get_section_id_for_cat(Request $request){
+        if($request->ajax()){
+            if (Auth::user()){
+                $user_id = Auth::user()->id;
+                $category = DB::table('categories')->where([
+                    ['id', '=', $request->categoryID],
+                    ['user_id', '=', $user_id],
+                ])->get();
+        
+                return $category;
+            }
+        } 
+    }
+
+    public function get_section_id_for_edit(Request $request){
+        if($request->ajax()){
+            if (Auth::user()){
+                $user_id = Auth::user()->id;
+                $category = DB::table('categories')->where([
+                    ['id', '=', $request->categoryID],
+                    ['user_id', '=', $user_id],
+                ])->get();
+        
+                return $category;
+            }
+        } 
+    }
 
     public function create_section(Request $request) {
         if($request->ajax()){
@@ -96,7 +136,7 @@ class DashboardController extends Controller
     public function remove_category(Request $request) {
         if($request->ajax()){
             if (Auth::user()){
-                $category_id = $request->category_id;
+                $category_id = $request->categoryID;
                 $user_id = Auth::user()->id;
                 DB::table('categories')->where('id', $category_id)->where('user_id',  $user_id)->delete();
                 return $category_id;
@@ -163,17 +203,66 @@ class DashboardController extends Controller
         }
     }
 
-    public function edit_section(Request $request){
+    public function edit_element(Request $request){
+        if($request->ajax()){
+            if (Auth::user()){
+                $user_id = Auth::user()->id;
+                $date = Carbon::now();
+                $element_id = $request->elementID;
+                $element_type = $request->elementType;
+                $name = $request->editName;
+                if($element_type == 1){
+                    $result = DB::update('update sections set name = ? where id = ?', [ $name, $element_id ]);
+                } else if($element_type == 2){
+                    $result = DB::update('update categories set category_name = ? where id = ?', [ $name, $element_id ]);
+                } else if($element_type == 3){
+                    $result = DB::update('update subjects set subject_name = ? where id = ?', [ $name, $element_id ] );
+                } else if($element_type == 4){
+                    $result = DB::update('update elements set element_name = ? where id = ?', [ $name, $element_id ] );
+                }
+            }
+        } 
+
+        return $result;
+    }
+
+    public function subject_data(Request $request){
+        if($request->ajax()){
+            if (Auth::user()){
+                $user_id = Auth::user()->id;
+                $elements = DB::table('elements')->where([
+                    ['subject_id', '=', $request->subjectID],
+                    ['user_id', '=', $user_id],
+                ])->get();
+            }
+        } 
+        return $elements;
+    }
+
+    public function remove_subject(Request $request){
+        if($request->ajax()){
+            if (Auth::user()){
+                $subject_id = $request->subjectID;
+                $user_id = Auth::user()->id;
+                DB::table('subjects')->where('id', $subject_id)->where('user_id',  $user_id)->delete();
+                return $request;
+            }
+        } 
+    }
+
+    public function create_element(Request $request){
+        if($request->ajax()){
+            if (Auth::user()){
+                $user_id = Auth::user()->id;
+                $date = Carbon::now();
+                DB::table('elements')->insert(
+                    array('subject_id' => $request->subjectID, 'element_name' => $request->elementName, 'user_id' => $user_id, 'created_at' => $date, 'updated_at' => $date)
+                );
+            }
+        } 
         return $request;
     }
 
-    public function edit_category(Request $request){
-        return $request;
-    }
-
-    public function edit_subject(Request $request){
-        return $request;
-    }
 
 }
 

@@ -49,42 +49,115 @@
 
     /* ---- Edit Element ----*/
 
-    function editElementSuccess(event, elementID, elementType){
+    function editElementSuccess(event, elementType, elementID){
         event.preventDefault();
-        console.log(elementID);
-        console.log(elementType);
+
+        let elementTypeNameGet = elementTypeName(elementType);
+        let editNameInput = $('#input-edit-' + elementTypeNameGet + '-' + elementID).val();
+        if(editNameInput != null && elementType != null && elementID != null){
+            $.ajax({
+                url: "{{ route('admin.edit_element') }}",
+                type: 'POST',
+                data: {
+                    elementID: elementID,
+                    elementType: elementType,
+                    editName: editNameInput
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: (data) => {
+                    if(elementType == 2){
+                        getSectionIdForEdit(event, elementID);
+                    } else if(elementType == 3){
+                        getCategoryIdForEdit(event, elementID);
+                    }
+                    
+                }
+            })
+        }
+    }
+
+    function updataSections(){
+        console.log('updataSections');
+        $.ajax({
+            url: "{{ route('admin.dashboard') }}",
+            type: 'GET',
+            data: {
+
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: (data) => {
+                $('body').empty();
+                $('body').append(data);
+            }
+        })
+    }
+
+
+
+    function showHideEdit(elementID, elementType){
+        
+        let elementTypeNameGet = elementTypeName(elementType);
+        
+        let el = $('#input-edit-' + elementTypeNameGet + '-' + elementID);
+
+        if(elementType == 1){
+            $('.edit-category').children().hide();
+            $('.edit-subject').children().hide();
+            $('.edit-element').children().hide();
+        } else if(elementType == 2){
+            $('.edit-section').children().hide();
+            $('.edit-subject').children().hide();
+            $('.edit-element').children().hide();
+        } else if(elementType == 3){
+            $('.edit-section').children().hide();
+            $('.edit-category').children().hide();
+            $('.edit-element').children().hide();
+        } else if(elementType == 3){
+            $('.edit-section').children().hide();
+            $('.edit-category').children().hide();
+            $('.edit-subject').children().hide();
+        }
+
+        if(el.length == 1 && el.css('display') == 'block'){
+            el.hide();
+            el.next().hide();
+        } else if(el.length == 1 && el.css('display') == 'none'){
+            $('.edit-section').children().hide();
+            $('.edit-category').children().hide();
+            $('.edit-subject').children().hide();
+            $('.edit-element').children().hide();
+            el.show();
+            el.next().show();
+        } else if(el.length == 0 && el.css('display') == undefined){
+            $('.edit-section').children().hide();
+            $('.edit-category').children().hide();
+            $('.edit-subject').children().hide();
+            $('.edit-element').children().hide();
+            $('#edit-' + elementTypeNameGet + '-' + elementID).append('<input class="form-control" id="input-edit-' + elementTypeNameGet + '-' + elementID + '" type="text"/><a href="" onclick="editElementSuccess(event, ' + elementType + ', ' + elementID + ')" class="create-button" >Изменить</a>');
+        } 
     }
 
     function editElement(elementID, elementType){
-        /* -- Section Edit --*/
+        showHideEdit(elementID, elementType);
+    }
+
+    function elementTypeName(elementType){
+        let elType;
         if(elementType == 1){
-            console.log('edit section ' + elementID);
-            $('.edit-section').children().remove();
-            $('.edit-subject').children().remove();
-            $('.edit-category').children().remove();
-            $('#edit-section-' + elementID).append('<input class="form-control" id="input-edit-section-' + elementID + '" type="text"/><a href="" class="create-button" >Изменить</a>');
+            elType = 'section';
+        } else if(elementType == 2){
+            elType = 'category';
+        } else if(elementType == 3){
+            elType = 'subject';
+        } else if(elementType == 4){
+            elType = 'element';
         }
-        /* -- Section Edit --*/
 
-        /* -- Category Edit --*/
-        if(elementType == 2){
-            console.log('edit category ' + elementID);
-            $('.edit-section').children().remove();
-            $('.edit-subject').children().remove();
-            $('.edit-category').children().remove();
-            $('#edit-category-' + elementID).append('<input class="form-control" id="input-edit-category-' + elementID + '" type="text"/><a href="" class="create-button" >Изменить</a>');
-        }
-        /* -- Category Edit --*/
-
-        /* -- Subject Edit --*/
-        if(elementType == 3){
-            console.log('edit element ' + elementID);
-            $('.edit-section').children().remove();
-            $('.edit-subject').children().remove();
-            $('.edit-category').children().remove();
-            $('#edit-subject-' + elementID).append('<input class="form-control" id="input-edit-subject-' + elementID + '" type="text"/><a href="" class="create-button" >Изменить</a>');
-        }
-        /* -- Subject Edit --*/
+        return elType;
     }
 
 
@@ -231,17 +304,57 @@
                     for(let i = 0; i < data.length; i++){
                         let subjectName = data[i].subject_name;
                         let subjectId = data[i].id;
-                        $('#cat-' + categoryID).append('<li class="sb-' + subjectId + '"><a href="" onclick="subjectData(event, ' + subjectId + ')" id="subject-id-' + subjectId + '">' + subjectName + '</a><i id="remove-subject" class="fa fa-times" aria-hidden="true" onclick="removeSubject(event, ' + subjectId +')" title="Удалить предмет ' + subjectName + '"></i> <i title="Редактировать предмет" onclick="editElement(' + subjectId + ', 3)" class="fa fa-pencil-square-o edit-element" aria-hidden="true"></i>  <i id="new-element" class="fa fa-sun-o" aria-hidden="true" onclick="newElement()" title="Создать элемент"></i> <i class="fa fa-puzzle-piece new-attribute sbj-id-' + subjectId + '" aria-hidden="true" onclick="appendInputAttributeForSubject(' + subjectId + ')" title="Создать атрибут"></i> <div id="edit-subject-' + subjectId + '" class="row edit-subject"></div> </li>');
+                        $('#cat-' + categoryID).append('<li id="sb-' + subjectId + '" class=""><a href="" onclick="subjectData(event, ' + subjectId + ')" id="subject-id-' + subjectId + '">' + subjectName + '</a><i id="remove-subject" class="fa fa-times" aria-hidden="true" onclick="removeSubject(event, ' + subjectId +')" title="Удалить предмет ' + subjectName + '"></i> <i title="Редактировать предмет" onclick="editElement(' + subjectId + ', 3)" class="fa fa-pencil-square-o edit-element" aria-hidden="true"></i>  <i id="new-element" class="fa fa-sun-o" aria-hidden="true" onclick="appendInputElement(' + subjectId + ')" title="Создать элемент"></i> <i class="fa fa-puzzle-piece new-attribute sbj-id-' + subjectId + '" aria-hidden="true" onclick="appendInputAttributeForSubject(' + subjectId + ')" title="Создать атрибут"></i> <div id="edit-subject-' + subjectId + '" class="row edit-subject"></div> <ul class="element-container" id="element-container-' + subjectId + '">  </ul> <div id="new-element-' + subjectId + '" class="row new-element"></div> </li>');
                         $('#cat-' + categoryID).filter(':last');
                     }
                 } else {
                     $('#cat-' + categoryID).empty();
                     $('#cat-' + categoryID).append('<li class="alert alert-warning-section">Предметы отсутствуют!</li>');
                 }
-
-                //console.log(data)
             }
         })
+    }
+
+    function subjectData(event, subjectID){
+        event.preventDefault();
+        $.ajax({
+            url: "{{ route('admin.subject_data') }}",
+            type: 'GET',
+            data: {
+                subjectID: subjectID,
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: (data) => {
+                if(data.length != 0){
+                    let subj = $('#element-container-' + subjectID).children();
+                    let subjDataStyle = $('#element-container-' + subjectID).children().css('display');
+                    if(subj.length == 0){
+                        for(let i = 0; i < data.length; i++){
+                            let element_name = data[i].element_name;
+                            let element_id = data[i].id;
+                            let subject_id = data[i].subject_id;
+                            $('#element-' + element_id).remove();
+
+                            $('#element-container-' + subject_id).append('<li id="element-' + element_id + '">' + element_name + ' <i id="remove-element" class="fa fa-times" aria-hidden="true" onclick="removeSubjectElement(event, ' + element_id + ')" title="Удалить элемент ' + element_name + '"></i> <i title="Редактировать элемент" onclick="editElement(' + element_id + ', 4)" class="fa fa-pencil-square-o edit-element" aria-hidden="true"></i> <i id="elem-edit-id-' + element_id + '" class="fa fa-puzzle-piece new-attribute" aria-hidden="true" onclick="appendInputAttributeForElement(' + element_id + ')" title="Создать атрибут"></i> <div id="edit-element-' + element_id + '" class="row edit-element"></div> </li>');
+                        }
+                    } else if(subj.length != 0 && subjDataStyle == 'block'){
+                        $('#element-container-' + subjectID).children().hide();
+                    } else if(subj.length != 0 && subjDataStyle == 'none'){
+                        $('#element-container-' + subjectID).children().show();
+                    }
+
+                } else {
+                    alert('Не имеется элементов!');
+                }
+            }
+        })
+    }
+
+
+    function removeSubjectElement(){
+
     }
 
     function appendInput(event){
@@ -256,7 +369,7 @@
         event.preventDefault();
         let inputSection =$('.categories').children('input');
         if(inputSection.length == 0){
-            $('.categories').append('<input class="form-control" placeholder="Название Категории" id="input-category" type="text" name="section-name"/><a href="" onclick="newCategory(event, ' + idSecion + ')">Создать</a>');
+            $('.categories').append('<input class="form-control" placeholder="Название Категории" id="input-category" type="text" name="section-name"/><a href="" class="create-button"  onclick="newCategory(event, ' + idSecion + ')">Создать</a>');
         }
     }
 
@@ -273,7 +386,7 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: (data) => {
-                location.reload()
+                updataSections()
             }
         })
     }
@@ -294,7 +407,7 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: (data) => {
-                location.reload()
+                updataSections()
             }
         })
     }
@@ -320,36 +433,97 @@
     let cName;
     let cId;
 
-    function removeCategorySuccess(event){
-        event.preventDefault();
-        $.ajax({
-            url: "{{ route('admin.remove_category') }}",
-            type: 'POST',
-            data: {
-                category_id: cId,
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: (data) => {
-                location.reload()
-            }
-        })
-    }
-
-    function removeCategoryCancel(){
-        $('.alert-warning-section').remove();
-    }
-
     function removeCategory(event, categoryId){
         event.preventDefault();
         let catName = $('#category-id-' + categoryId).html();
         cName = catName;
         cId = categoryId;
         $('.warning-block').empty();
-        $('.warning-block').prepend('<div class="alert alert-warning-section" role="alert">Раздел " ' + catName + ' " и все связанные с ним данные будут удалены!<button type="button" class="btn btn-success-section" onclick="removeCategorySuccess(event)">Удалить</button><button type="button" class="btn btn-warning-section" onclick="removeCategoryCancel()">Отмена</button></div>');
+        $('.warning-block').prepend('<div class="alert alert-warning-section" role="alert">Категория " ' + catName + ' " и все связанные с ней данные будут удалены!<button type="button" class="btn btn-success-section" onclick="removeCategorySuccess(event, ' + categoryId + ')">Удалить</button><button type="button" class="btn btn-warning-section" onclick="removeCategoryCancel()">Отмена</button></div>');
         $('html').scrollTop(0);
     }
+
+    function removeCategorySuccess(event, categoryID){
+        event.preventDefault();
+        getSectionIdForCategory(event, categoryID);
+    }
+
+    function removeCategoryEnd(event, categoryID, sectionID){
+        $.ajax({
+            url: "{{ route('admin.remove_category') }}",
+            type: 'POST',
+            data: {
+                categoryID: categoryID,
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: (data) => {
+                getSectionName(event, sectionID);
+            }
+        })
+    }
+
+
+    function getSectionIdForCategory(event, categoryID){
+        $.ajax({
+            url: "{{ route('admin.get_section_id_for_cat') }}",
+            type: 'GET',
+            data: {
+                categoryID: categoryID
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: (data) => {
+                let sectionID = data[0].section_id;
+                removeCategoryEnd(event, categoryID, sectionID);
+            }
+        })
+    }
+
+    function getSectionIdForEdit(event, categoryID){
+        $.ajax({
+            url: "{{ route('admin.get_section_id_for_edit') }}",
+            type: 'GET',
+            data: {
+                categoryID: categoryID
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: (data) => {
+                let sectionID = data[0].section_id;
+                getSectionName(event, sectionID);
+            }
+        })
+    }
+
+
+    function removeCategoryCancel(){
+        $('.alert-warning-section').remove();
+    }
+
+
+
+    function getSectionName(event, sectionID){
+        $.ajax({
+            url: "{{ route('admin.get_section_name') }}",
+            type: 'GET',
+            data: {
+                sectionID: sectionID
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: (data) => {
+                let sectionName = data[0].name;
+                sectionData(event, sectionName, sectionID);
+            }
+        })
+    }
+
+
 
     function newCategory(event, idSection){
         event.preventDefault();
@@ -365,7 +539,7 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: (data) => {
-                location.reload()
+                getSectionName(event, idSection);
             }
         })
     }
@@ -376,8 +550,50 @@
 
     /*---- Subject ----*/
 
+    function removeSubjectSuccess(event, subjectID){
+        event.preventDefault();
+        getCategoryId(event, subjectID);
+    }
+
+    function getCategoryIdForEdit(event, subjectID){
+        let = parentEl = $('#sb-' + subjectID).parent();
+        parentID = parentEl[0].id;
+        parentID = parentID.replace('cat-', '');
+        let categoryID = Number(parentID);
+        $('#cat-' + categoryID).hide();
+        categoryData(event, categoryID);
+    }
+
+    function getCategoryId(event, subjectID){
+        let = parentEl = $('#sb-' + subjectID).parent();
+        parentID = parentEl[0].id;
+        parentID = parentID.replace('cat-', '');
+        let categoryID = Number(parentID);
+        
+        $.ajax({
+            url: "{{ route('admin.remove_subject') }}",
+            type: 'POST',
+            data: {
+                subjectID: subjectID,
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: (data) => {
+                
+            }
+        })
+
+        $('#cat-' + categoryID).hide();
+        categoryData(event, categoryID);
+    }
+
     function removeSubject(event, subjectID){
-        console.log(subjectID);
+        event.preventDefault();
+        let subjName = $('#subject-id-' + subjectID).html();
+        $('.warning-block').empty();
+        $('.warning-block').prepend('<div class="alert alert-warning-section" role="alert">Предмет " ' + subjName + ' " и все связанные с ним данные будут удалены!<button type="button" class="btn btn-success-section" onclick="removeSubjectSuccess(event, ' + subjectID + ')">Удалить</button><button type="button" class="btn btn-warning-section" onclick="removeCategoryCancel()">Отмена</button></div>');
+        $('html').scrollTop(0);
     }
 
     function appendInputSubject(categoryID){
@@ -409,7 +625,8 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: (data) => {
-                location.reload()
+                $('#cat-' + categoryID).hide();
+                categoryData(event, categoryID);
             }
         })
     }
@@ -419,10 +636,46 @@
 
     /*---- Element ----*/
 
-    function appendInputElement(categoryID){
-        //console.log('Element ' + categoryID);
-        /*<i id="new-element" class="fa fa-sun-o" aria-hidden="true" onclick="newElement()" title="Создать элемент"></i>*/
 
+
+    function newElementSuccess(event, subjectID){
+        event.preventDefault();
+        
+        let elementName = $('#input-new-element-' + subjectID).val();
+        //console.log(elementName);
+
+        $.ajax({
+            url: "{{ route('admin.create_element') }}",
+            type: 'POST',
+            data: {
+                subjectID: subjectID,
+                elementName: elementName
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: (data) => {
+                //location.reload()
+            }
+        })
+    }
+
+    function appendInputElement(subjectID){
+        let inputElem = $('#input-new-element-' + subjectID);
+        let inputElemDisp = $('#input-new-element-' + subjectID).css('display');
+
+        if(inputElem.length == 0 && inputElemDisp == undefined){
+            $('.input-new-element').next().remove();
+            $('.input-new-element').remove();
+            $('#new-element-' + subjectID).append('<input class="form-control input-new-element" id="input-new-element-' + subjectID + '" type="text"/><a href="" onclick="newElementSuccess(event, ' + subjectID + ')" class="create-button" >Создать элемент</a>');
+        } else if(inputElem.length != 0 && inputElemDisp == 'block'){
+            $('#input-new-element-' + subjectID).next().hide();
+            $('#input-new-element-' + subjectID).hide();
+        } else if(inputElem.length != 0 && inputElemDisp == 'none'){
+            $('#input-new-element-' + subjectID).next().show();
+            $('#input-new-element-' + subjectID).show();
+        }
+        
     }
 
     /*---- Element ----*/
