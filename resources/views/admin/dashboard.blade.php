@@ -72,11 +72,26 @@
                     } else if(elementType == 3){
                         getCategoryIdForEdit(event, elementID);
                     }
-                    
                 }
             })
         }
     }
+
+    function appendInputAttributeForSubject(subjectID){
+        let inputAttrSubject = $('#input-div-subject-' + subjectID);
+        let inputAttrSubjectDisp = $('#input-div-subject-' + subjectID).css('display');
+        let inputS = $('.input-attribute-subject').length;
+
+        if(inputAttrSubject.length == 0 && inputAttrSubjectDisp == undefined || inputS == 0){
+            $('.form-div-subject').remove();
+            $('#subject-attribute-' + subjectID).append('<div class="form-div subject-div" id="input-div-subject-' + subjectID + '"><form id="subject-form-' + subjectID + '"><input class="form-control input-attribute" placeholder="Название Атрибута" type="text" name="attribute-name"/> <input class="form-control input-attribute" placeholder="Описание Атрибута" type="text" name="description"/> <input class="form-control input-attribute" placeholder="Номинальное значение Атрибута (Целое число)" type="number" name="number-attribute"/> <input class="form-control input-attribute" placeholder="Номинальное значение Атрибута (Дробное число - точность 2 после запятой)" type="number" name="double-2"/> <input class="form-control input-attribute" placeholder="Номинальное значение Атрибута (Дробное число - точность 15 после запятой)" type="number" name="double-15"/> <span class="span-attribute">Время начала</span> <input class="form-control input-attribute" placeholder="Время" type="time" name="time-first"/> <span class="span-attribute">Время окончания</span> <input class="form-control input-attribute" placeholder="Время" type="time" name="time-second"/> <input class="form-control input-attribute" placeholder="Текст Атрибута" type="text" name="attribute-text"/> <input class="form-control input-attribute" placeholder="Строковые данные" type="text" name="attribute-varchar"/> <input class="form-control input-attribute file-input" onchange="encodeImage(this)" type="file" name="attribute-file"/> <a class="link" id="image-data-' + subjectID + '" href=""></a> <span class="span-attribute">Да</span> <input class="form-control input-attribute input-radio-attribute" type="radio" name="attribute-bool" value="true" /> <span class="span-attribute">Нет</span> <input class="form-control input-attribute input-radio-attribute" type="radio" name="attribute-bool" value="false"/> <input class="form-control input-attribute" placeholder="IP адрес" type="text" name="attribute-ip"/> <input type="submit" class="create-button"  onclick="newAttributeForCat(event, ' + subjectID + ')"/></form> <hr style="width: 25%;"></div>');
+        } else if(inputAttrSubject.length != 0 && inputAttrSubjectDisp == 'block'){
+            $('#input-div-subject-' + subjectID).hide();
+        } else if(inputAttrSubject.length != 0 && inputAttrSubjectDisp == 'none'){
+            $('#input-div-subject-' + subjectID).show();
+        }
+    }
+
 
     function updataSections(){
         console.log('updataSections');
@@ -304,7 +319,7 @@
                     for(let i = 0; i < data.length; i++){
                         let subjectName = data[i].subject_name;
                         let subjectId = data[i].id;
-                        $('#cat-' + categoryID).append('<li id="sb-' + subjectId + '" class=""><a href="" onclick="subjectData(event, ' + subjectId + ')" id="subject-id-' + subjectId + '">' + subjectName + '</a><i id="remove-subject" class="fa fa-times" aria-hidden="true" onclick="removeSubject(event, ' + subjectId +')" title="Удалить предмет ' + subjectName + '"></i> <i title="Редактировать предмет" onclick="editElement(' + subjectId + ', 3)" class="fa fa-pencil-square-o edit-element" aria-hidden="true"></i>  <i id="new-element" class="fa fa-sun-o" aria-hidden="true" onclick="appendInputElement(' + subjectId + ')" title="Создать элемент"></i> <i class="fa fa-puzzle-piece new-attribute sbj-id-' + subjectId + '" aria-hidden="true" onclick="appendInputAttributeForSubject(' + subjectId + ')" title="Создать атрибут"></i> <div id="edit-subject-' + subjectId + '" class="row edit-subject"></div> <ul class="element-container" id="element-container-' + subjectId + '">  </ul> <div id="new-element-' + subjectId + '" class="row new-element"></div> </li>');
+                        $('#cat-' + categoryID).append('<li id="sb-' + subjectId + '" class=""><a href="" onclick="subjectData(event, ' + subjectId + ')" id="subject-id-' + subjectId + '">' + subjectName + '</a><i id="remove-subject" class="fa fa-times" aria-hidden="true" onclick="removeSubject(event, ' + subjectId +')" title="Удалить предмет ' + subjectName + '"></i> <i title="Редактировать предмет" onclick="editElement(' + subjectId + ', 3)" class="fa fa-pencil-square-o edit-element" aria-hidden="true"></i>  <i id="new-element" class="fa fa-sun-o" aria-hidden="true" onclick="appendInputElement(' + subjectId + ')" title="Создать элемент"></i> <i class="fa fa-puzzle-piece new-attribute sbj-id-' + subjectId + '" aria-hidden="true" onclick="appendInputAttributeForSubject(' + subjectId + ')" title="Создать атрибут"></i> <div id="edit-subject-' + subjectId + '" class="row edit-subject"></div> <ul class="element-container" id="element-container-' + subjectId + '">  </ul> <div id="new-element-' + subjectId + '" class="row new-element"></div> <div id="subject-attribute-' + subjectId + '" class="row subject-attribute"></div> </li>');
                         $('#cat-' + categoryID).filter(':last');
                     }
                 } else {
