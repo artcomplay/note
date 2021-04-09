@@ -48,6 +48,7 @@
 <script>
 
     /* ---- Edit Element ----*/
+    
 
     function editElementSuccess(event, elementType, elementID){
         event.preventDefault();
@@ -77,20 +78,7 @@
         }
     }
 
-    function appendInputAttributeForSubject(subjectID){
-        let inputAttrSubject = $('#input-div-subject-' + subjectID);
-        let inputAttrSubjectDisp = $('#input-div-subject-' + subjectID).css('display');
-        let inputS = $('.input-attribute-subject').length;
 
-        if(inputAttrSubject.length == 0 && inputAttrSubjectDisp == undefined || inputS == 0){
-            $('.form-div-subject').remove();
-            $('#subject-attribute-' + subjectID).append('<div class="form-div subject-div" id="input-div-subject-' + subjectID + '"><form id="subject-form-' + subjectID + '"><input class="form-control input-attribute" placeholder="Название Атрибута" type="text" name="attribute-name"/> <input class="form-control input-attribute" placeholder="Описание Атрибута" type="text" name="description"/> <input class="form-control input-attribute" placeholder="Номинальное значение Атрибута (Целое число)" type="number" name="number-attribute"/> <input class="form-control input-attribute" placeholder="Номинальное значение Атрибута (Дробное число - точность 2 после запятой)" type="number" name="double-2"/> <input class="form-control input-attribute" placeholder="Номинальное значение Атрибута (Дробное число - точность 15 после запятой)" type="number" name="double-15"/> <span class="span-attribute">Время начала</span> <input class="form-control input-attribute" placeholder="Время" type="time" name="time-first"/> <span class="span-attribute">Время окончания</span> <input class="form-control input-attribute" placeholder="Время" type="time" name="time-second"/> <input class="form-control input-attribute" placeholder="Текст Атрибута" type="text" name="attribute-text"/> <input class="form-control input-attribute" placeholder="Строковые данные" type="text" name="attribute-varchar"/> <input class="form-control input-attribute file-input" onchange="encodeImage(this)" type="file" name="attribute-file"/> <a class="link" id="image-data-' + subjectID + '" href=""></a> <span class="span-attribute">Да</span> <input class="form-control input-attribute input-radio-attribute" type="radio" name="attribute-bool" value="true" /> <span class="span-attribute">Нет</span> <input class="form-control input-attribute input-radio-attribute" type="radio" name="attribute-bool" value="false"/> <input class="form-control input-attribute" placeholder="IP адрес" type="text" name="attribute-ip"/> <input type="submit" class="create-button"  onclick="newAttributeForCat(event, ' + subjectID + ')"/></form> <hr style="width: 25%;"></div>');
-        } else if(inputAttrSubject.length != 0 && inputAttrSubjectDisp == 'block'){
-            $('#input-div-subject-' + subjectID).hide();
-        } else if(inputAttrSubject.length != 0 && inputAttrSubjectDisp == 'none'){
-            $('#input-div-subject-' + subjectID).show();
-        }
-    }
 
 
     function updataSections(){
@@ -253,11 +241,17 @@
                     }
 
                 } else{
-                    $('#attributes-row-' + categoryID).append('<li> Не содержится атрибутов </li>');
+                    /*$('#attributes-row-' + categoryID).append('<li> Не содержится атрибутов </li>');*/
+                    
+                    $('#attributes-row-' + categoryID).append('<i title="Не содержится атрибутов" class="fa fa-circle-o circle-empty" aria-hidden="true">');
                 }
             }
         })
     }
+
+    let isEven = function(someNumber) {
+        return (someNumber % 2 == 0) ? true : false;
+    };
 
     function sectionData(event, sectionName, idSection){
         event.preventDefault();
@@ -278,7 +272,14 @@
                     for(let i = 0; i < data.length; i++){
                         let categoryName = data[i].category_name;
                         let categoryId = data[i].id;
-                        $('.categories').append('<li id="li-' + categoryId + '"><a href="" onclick="categoryData(event, ' + categoryId + ')" id="category-id-' + categoryId + '">' + categoryName + '</a><i id="remove-category" class="fa fa-times" aria-hidden="true" onclick="removeCategory(event, ' + categoryId +')" title="Удалить категорию ' + categoryName + '"></i> <i title="Редактировать категорию" onclick="editElement(' + categoryId + ', 2)" class="fa fa-pencil-square-o edit-element" aria-hidden="true"></i> <i id="new-subject" class="fa fa-cube cat-id-' + categoryId + '" aria-hidden="true" onclick="appendInputSubject(' + categoryId + ')" title="Создать предмет"></i> <i class="fa fa-puzzle-piece new-attribute ctg-id-' + categoryId + '" aria-hidden="true" onclick="appendInputAttributeForCat(' + categoryId + ')" title="Создать атрибут"></i> <div id="edit-category-' + categoryId + '" class="row edit-category"></div> <ul class="atr-st row" id="attributes-row-'+ categoryId +'"></ul> </li> <ul id="cat-' + categoryId + '"></ul><hr>');
+                        let evenC = isEven(i);
+                        let ev;
+                        if(evenC == true){
+                            ev = 'bg-cat-gr';
+                        } else if(evenC == false){
+                            ev = 'bg-cat-wh';
+                        }
+                        $('.categories').append('<li id="li-' + categoryId + '" class="' +  ev + '"> <i class="fa fa-square cat-icon" aria-hidden="true"></i> <a href="" class="category-href" onclick="categoryData(event, ' + categoryId + ')" id="category-id-' + categoryId + '">' + categoryName + '</a><i id="remove-category" class="fa fa-times" aria-hidden="true" onclick="removeCategory(event, ' + categoryId +')" title="Удалить категорию ' + categoryName + '"></i> <i title="Редактировать категорию" onclick="editElement(' + categoryId + ', 2)" class="fa fa-pencil-square-o edit-element" aria-hidden="true"></i> <i id="new-subject" class="fa fa-cube cat-id-' + categoryId + '" aria-hidden="true" onclick="appendInputSubject(' + categoryId + ')" title="Создать предмет"></i> <i class="fa fa-puzzle-piece new-attribute ctg-id-' + categoryId + '" aria-hidden="true" onclick="appendInputAttributeForCat(' + categoryId + ')" title="Создать атрибут"></i> <div id="edit-category-' + categoryId + '" class="row edit-category"></div> <ul class="atr-st row" id="attributes-row-'+ categoryId +'"> </i></ul> <ul id="cat-' + categoryId + '" class="cat-data"></ul> </li>');
                         attributesData(event, categoryId);
                     }
                     $('.categories').append('<li><a href="" onclick="appendInputCategory(event, ' + idSection + ')">+ Добавить категорию</a></li>');
@@ -292,17 +293,57 @@
     }
 
 
-
     function categoryData(event, categoryID){
         event.preventDefault();
-        let child = $('#cat-' + categoryID).children();
+        let child = $('#cat-' + categoryID).children('.sbj-item');
         let disp = $('#cat-' + categoryID).css('display');
+        let childDisp = $('#cat-' + categoryID).children('.sbj-item').css('display');
+
         if(child.length != 0 && disp == 'none'){
             $('#cat-' + categoryID).show();
+            $('#category-id-' + categoryID).prev().css('color', '#00801c45');
         } else if(child.length != 0 && disp == 'block') {
             $('#cat-' + categoryID).hide();
-        }
+            $('#category-id-' + categoryID).prev().css('color', '#8e55b14d');
+        } else if(child.length == 0 && childDisp == undefined && disp == 'block'){
+            $.ajax({
+                url: "{{ route('admin.category_data') }}",
+                type: 'GET',
+                data: {
+                    categoryID: categoryID,
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: (data) => {
+                    $('#category-id-' + categoryID).prev().css('color', '#00801c45');
+                    if(data.length != 0){
+                        $('#cat-' + categoryID).empty();
+                        $('.warning-block').empty();
+                        for(let i = 0; i < data.length; i++){
+                            let subjectName = data[i].subject_name;
+                            let subjectId = data[i].id;
+                            $('#cat-' + categoryID).append('<li id="sb-' + subjectId + '" class="sbj-item"> <i class="fa fa-circle sbj-icon" aria-hidden="true"></i> <a href="" class="subject-href" onclick="subjectData(event, ' + subjectId + ')" id="subject-id-' + subjectId + '">' + subjectName + '</a><i id="remove-subject" class="fa fa-times" aria-hidden="true" onclick="removeSubject(event, ' + subjectId +')" title="Удалить предмет ' + subjectName + '"></i> <i title="Редактировать предмет" onclick="editElement(' + subjectId + ', 3)" class="fa fa-pencil-square-o edit-element" aria-hidden="true"></i>  <i id="new-element" class="fa fa-sun-o" aria-hidden="true" onclick="appendInputElement(' + subjectId + ')" title="Создать элемент"></i> <i class="fa fa-puzzle-piece new-attribute sbj-id-' + subjectId + '" aria-hidden="true" onclick="appendInputAttributeForSubject(' + subjectId + ')" title="Создать атрибут"></i> <div id="edit-subject-' + subjectId + '" class="row edit-subject"></div>  <ul class="element-container" id="element-container-' + subjectId + '">  </ul> <div id="new-element-' + subjectId + '" class="row new-element"></div> <ul id="subject-attribute-' + subjectId + '" class="row subject-attribute"></ul> </li>');
+                            $('#cat-' + categoryID).filter(':last');
+                            getSubjectAttributes(subjectId);
+                        }
+                    } else {
+                        if($('.alert-warning-section').length == 0){
+                            $('#cat-' + categoryID).append('<li class="alert alert-warning-section">Предметы отсутствуют!</li>');
+                            $('#category-id-' + categoryID).prev().css('color', '#00801c45');
+                        } else if($('.alert-warning-section').length != 0){
+                            $('#cat-' + categoryID).empty();
+                            $('#category-id-' + categoryID).prev().css('color', '#8e55b14d');
+                        }
 
+                    }
+                }
+            })
+        }
+    }
+
+
+    function categoryDataUpdatе(categoryID){
         $.ajax({
             url: "{{ route('admin.category_data') }}",
             type: 'GET',
@@ -313,18 +354,99 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: (data) => {
+                $('#category-id-' + categoryID).prev().css('color', '#00801c45');
                 if(data.length != 0){
                     $('#cat-' + categoryID).empty();
                     $('.warning-block').empty();
                     for(let i = 0; i < data.length; i++){
                         let subjectName = data[i].subject_name;
                         let subjectId = data[i].id;
-                        $('#cat-' + categoryID).append('<li id="sb-' + subjectId + '" class=""><a href="" onclick="subjectData(event, ' + subjectId + ')" id="subject-id-' + subjectId + '">' + subjectName + '</a><i id="remove-subject" class="fa fa-times" aria-hidden="true" onclick="removeSubject(event, ' + subjectId +')" title="Удалить предмет ' + subjectName + '"></i> <i title="Редактировать предмет" onclick="editElement(' + subjectId + ', 3)" class="fa fa-pencil-square-o edit-element" aria-hidden="true"></i>  <i id="new-element" class="fa fa-sun-o" aria-hidden="true" onclick="appendInputElement(' + subjectId + ')" title="Создать элемент"></i> <i class="fa fa-puzzle-piece new-attribute sbj-id-' + subjectId + '" aria-hidden="true" onclick="appendInputAttributeForSubject(' + subjectId + ')" title="Создать атрибут"></i> <div id="edit-subject-' + subjectId + '" class="row edit-subject"></div> <ul class="element-container" id="element-container-' + subjectId + '">  </ul> <div id="new-element-' + subjectId + '" class="row new-element"></div> <div id="subject-attribute-' + subjectId + '" class="row subject-attribute"></div> </li>');
+                        $('#cat-' + categoryID).append('<li id="sb-' + subjectId + '" class="sbj-item"> <i class="fa fa-circle sbj-icon" aria-hidden="true"></i> <a href="" class="subject-href" onclick="subjectData(event, ' + subjectId + ')" id="subject-id-' + subjectId + '">' + subjectName + '</a><i id="remove-subject" class="fa fa-times" aria-hidden="true" onclick="removeSubject(event, ' + subjectId +')" title="Удалить предмет ' + subjectName + '"></i> <i title="Редактировать предмет" onclick="editElement(' + subjectId + ', 3)" class="fa fa-pencil-square-o edit-element" aria-hidden="true"></i>  <i id="new-element" class="fa fa-sun-o" aria-hidden="true" onclick="appendInputElement(' + subjectId + ')" title="Создать элемент"></i> <i class="fa fa-puzzle-piece new-attribute sbj-id-' + subjectId + '" aria-hidden="true" onclick="appendInputAttributeForSubject(' + subjectId + ')" title="Создать атрибут"></i> <div id="edit-subject-' + subjectId + '" class="row edit-subject"></div>  <ul class="element-container" id="element-container-' + subjectId + '">  </ul> <div id="new-element-' + subjectId + '" class="row new-element"></div> <ul id="subject-attribute-' + subjectId + '" class="row subject-attribute"></ul> </li>');
                         $('#cat-' + categoryID).filter(':last');
+                        getSubjectAttributes(subjectId);
                     }
                 } else {
-                    $('#cat-' + categoryID).empty();
-                    $('#cat-' + categoryID).append('<li class="alert alert-warning-section">Предметы отсутствуют!</li>');
+                    if($('.alert-warning-section').length == 0){
+                        $('#cat-' + categoryID).append('<li class="alert alert-warning-section">Предметы отсутствуют!</li>');
+                        $('#category-id-' + categoryID).prev().css('color', '#00801c45');
+                    } else if($('.alert-warning-section').length != 0){
+                        $('#cat-' + categoryID).empty();
+                        $('#category-id-' + categoryID).prev().css('color', '#8e55b14d');
+                    }
+                }
+            }
+        })
+    }
+
+    function getSubjectAttributes(subjectID){
+        let attributesData;
+        $.ajax({
+            url: "{{ route('admin.subject_attributes_data') }}",
+            type: 'GET',
+            data: {
+                subjectID: subjectID
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: (data) => {
+                if(data.length != 0){
+                    attributesData = data;
+                    if(data.length != 0){
+                        for(let i = 0; i < attributesData.length; i++){
+                            if(attributesData[i].attribute_name != null){
+                                $('#subject-attribute-' + subjectID).append('<li title="Дата создания атрибута ' + attributesData[i].created_at + '. Дата обновления атрибута ' + attributesData[i].updated_at + '">' + attributesData[i].attribute_name + '</li>');
+                                if(attributesData[i].attribute_img != null){
+                                    $('#subject-attribute-' + subjectID).append('<li style="width: 100%;"></li>');
+                                }
+                            }
+                            if(attributesData[i].attribute_description != null){
+                                $('#subject-attribute-' + subjectID).append('<li>' + attributesData[i].attribute_description + '</li>');
+                            }
+                            if(attributesData[i].attribute_double != null){
+                                $('#subject-attribute-' + subjectID).append('<li>' + attributesData[i].attribute_double + '</li>');
+                            }
+                            if(attributesData[i].attribute_float != null){
+                                $('#subject-attribute-' + subjectID).append('<li>' + attributesData[i].attribute_float + '</li>');
+                            }
+                            if(attributesData[i].attribute_int != null){
+                                $('#subject-attribute-' + subjectID).append('<li>' + attributesData[i].attribute_int + '</li>');
+                            }
+                            if(attributesData[i].attribute_text != null){
+                                $('#subject-attribute-' + subjectID).append('<li>' + attributesData[i].attribute_text + '</li>');
+                            }
+                            if(attributesData[i].attribute_time_first != null){
+                                $('#subject-attribute-' + subjectID).append('<li>' + attributesData[i].attribute_time_first + '</li>');
+                            }
+                            if(attributesData[i].attribute_time_second != null){
+                                $('#subject-attribute-' + subjectID).append('<li>' + attributesData[i].attribute_time_second + '</li>');
+                            }
+                            if(attributesData[i].attribute_varchar != null){
+                                $('#subject-attribute-' + subjectID).append('<li>' + attributesData[i].attribute_varchar + '</li>');
+                            }
+                            if(attributesData[i].attribute_img != null){
+                                $('#subject-attribute-' + subjectID).append('<li class="li-image-attribute"><img class="attribute-image" data-toggle="modal" data-target="#bd-example-modal-lg-' + attributesData[i].id + '" src="' + attributesData[i].attribute_img + '"/></li>');
+                                $('#subject-attribute-' + subjectID).append('<div id="bd-example-modal-lg-' + attributesData[i].id + '" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg"><div class="modal-content"> <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button><img class="modal-image" data-toggle="modal" data-target=".bd-example-modal-lg" src="' + attributesData[i].attribute_img + '"/></div></div></div>');
+                            }
+                            if(attributesData[i].created_at != null){
+                                //$('#attributes-row-' + categoryID).append('<li>' + attributesData[i].created_at + '</li>');
+                            }
+                            if(attributesData[i].updated_at != null){
+                                //$('#attributes-row-' + categoryID).append('<li>' + attributesData[i].updated_at + '</li>');
+                            }
+                            if(attributesData[i].attribute_bool != null && attributesData[i].attribute_bool == 1){
+                                $('#subject-attribute-' + subjectID).append('<li>Да</li>');
+                            } else if(attributesData[i].attribute_bool != null && attributesData[i].attribute_bool == 0){
+                                $('#subject-attribute-' + subjectID).append('<li>Нет</li>');
+                            }
+                            $('#subject-attribute-' + subjectID).append('<li style="width: 100%;"></li>');
+                        }
+                    } else {
+                        
+                    }
+
+                } else{
+                    /*$('#subject-attribute-' + subjectID).append('<li> Не содержится атрибутов </li>');*/
                 }
             }
         })
@@ -351,7 +473,6 @@
                             let element_id = data[i].id;
                             let subject_id = data[i].subject_id;
                             $('#element-' + element_id).remove();
-
                             $('#element-container-' + subject_id).append('<li id="element-' + element_id + '">' + element_name + ' <i id="remove-element" class="fa fa-times" aria-hidden="true" onclick="removeSubjectElement(event, ' + element_id + ')" title="Удалить элемент ' + element_name + '"></i> <i title="Редактировать элемент" onclick="editElement(' + element_id + ', 4)" class="fa fa-pencil-square-o edit-element" aria-hidden="true"></i> <i id="elem-edit-id-' + element_id + '" class="fa fa-puzzle-piece new-attribute" aria-hidden="true" onclick="appendInputAttributeForElement(' + element_id + ')" title="Создать атрибут"></i> <div id="edit-element-' + element_id + '" class="row edit-element"></div> </li>');
                         }
                     } else if(subj.length != 0 && subjDataStyle == 'block'){
@@ -365,6 +486,10 @@
                 }
             }
         })
+    }
+
+    function appendInputAttributeForElement(){
+        console.log('ok');
     }
 
 
@@ -595,12 +720,14 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: (data) => {
-                
+
             }
         })
 
-        $('#cat-' + categoryID).hide();
-        categoryData(event, categoryID);
+        //$('#cat-' + categoryID).hide();
+        //categoryData(event, categoryID);
+        categoryDataUpdatе(categoryID);
+
     }
 
     function removeSubject(event, subjectID){
@@ -640,8 +767,8 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: (data) => {
-                $('#cat-' + categoryID).hide();
-                categoryData(event, categoryID);
+                //$('#cat-' + categoryID).hide();
+                categoryDataUpdatе(categoryID);
             }
         })
     }
@@ -699,6 +826,21 @@
 
     /*---- Attribute ----*/
 
+    function appendInputAttributeForSubject(subjectID){
+        let inputAttrSubject = $('#input-div-subject-' + subjectID);
+        let inputAttrSubjectDisp = $('#input-div-subject-' + subjectID).css('display');
+        let inputS = $('#subject-form-' + subjectID).length;
+
+        if(inputAttrSubject.length == 0 && inputAttrSubjectDisp == undefined || inputS == 0){
+            $('.form-div-subject').remove();
+            $('#subject-attribute-' + subjectID).append('<div class="form-div subject-div" id="input-div-subject-' + subjectID + '"><form id="subject-form-' + subjectID + '"><input class="form-control input-attribute" placeholder="Название Атрибута" type="text" name="attribute-name"/> <input class="form-control input-attribute" placeholder="Описание Атрибута" type="text" name="description"/> <input class="form-control input-attribute" placeholder="Номинальное значение Атрибута (Целое число)" type="number" name="number-attribute"/> <input class="form-control input-attribute" placeholder="Номинальное значение Атрибута (Дробное число - точность 2 после запятой)" type="number" name="double-2"/> <input class="form-control input-attribute" placeholder="Номинальное значение Атрибута (Дробное число - точность 15 после запятой)" type="number" name="double-15"/> <span class="span-attribute">Время начала</span> <input class="form-control input-attribute" placeholder="Время" type="time" name="time-first"/> <span class="span-attribute">Время окончания</span> <input class="form-control input-attribute" placeholder="Время" type="time" name="time-second"/> <input class="form-control input-attribute" placeholder="Текст Атрибута" type="text" name="attribute-text"/> <input class="form-control input-attribute" placeholder="Строковые данные" type="text" name="attribute-varchar"/> <input class="form-control input-attribute file-input" onchange="encodeImage(this)" type="file" name="attribute-file"/> <a class="link" id="image-data-subj-' + subjectID + '" href=""></a> <span class="span-attribute">Да</span> <input class="form-control input-attribute input-radio-attribute" type="radio" name="attribute-bool" value="true" /> <span class="span-attribute">Нет</span> <input class="form-control input-attribute input-radio-attribute" type="radio" name="attribute-bool" value="false"/> <input class="form-control input-attribute" placeholder="IP адрес" type="text" name="attribute-ip"/> <input type="submit" class="create-button"  onclick="newAttributeForSubj(event, ' + subjectID + ')"/></form> <hr style="width: 25%;"></div>');
+        } else if(inputAttrSubject.length != 0 && inputAttrSubjectDisp == 'block'){
+            $('#input-div-subject-' + subjectID).hide();
+        } else if(inputAttrSubject.length != 0 && inputAttrSubjectDisp == 'none'){
+            $('#input-div-subject-' + subjectID).show();
+        }
+    }
+
     function appendInputAttributeForCat(categoryID){
         let inputAttr = $('.input-div-' + categoryID);
         let inputAttrDisp = $('.input-div-' + categoryID).css('display');
@@ -706,13 +848,52 @@
 
         if(inputAttr.length == 0 && inputAttrDisp == undefined || inputF == 0){
             $('.form-div').remove();
-            $('#li-' + categoryID).append('<div class="form-div input-div-' + categoryID + '"><form id="category-form-' + categoryID + '"><input class="form-control input-attribute" placeholder="Название Атрибута" type="text" name="attribute-name"/> <input class="form-control input-attribute" placeholder="Описание Атрибута" type="text" name="description"/> <input class="form-control input-attribute" placeholder="Номинальное значение Атрибута (Целое число)" type="number" name="number-attribute"/> <input class="form-control input-attribute" placeholder="Номинальное значение Атрибута (Дробное число - точность 2 после запятой)" type="number" name="double-2"/> <input class="form-control input-attribute" placeholder="Номинальное значение Атрибута (Дробное число - точность 15 после запятой)" type="number" name="double-15"/> <span class="span-attribute">Время начала</span> <input class="form-control input-attribute" placeholder="Время" type="time" name="time-first"/> <span class="span-attribute">Время окончания</span> <input class="form-control input-attribute" placeholder="Время" type="time" name="time-second"/> <input class="form-control input-attribute" placeholder="Текст Атрибута" type="text" name="attribute-text"/> <input class="form-control input-attribute" placeholder="Строковые данные" type="text" name="attribute-varchar"/> <input class="form-control input-attribute file-input" onchange="encodeImage(this)" type="file" name="attribute-file"/> <a class="link" id="image-data-' + categoryID + '" href=""></a> <span class="span-attribute">Да</span> <input class="form-control input-attribute input-radio-attribute" type="radio" name="attribute-bool" value="true" /> <span class="span-attribute">Нет</span> <input class="form-control input-attribute input-radio-attribute" type="radio" name="attribute-bool" value="false"/> <input class="form-control input-attribute" placeholder="IP адрес" type="text" name="attribute-ip"/> <input type="submit" class="create-button"  onclick="newAttributeForCat(event, ' + categoryID + ')"/></form> <hr style="width: 25%;"></div>');
+            $('#li-' + categoryID).append('<div class="form-div category-div input-div-' + categoryID + '"><form id="category-form-' + categoryID + '"><input class="form-control input-attribute" placeholder="Название Атрибута" type="text" name="attribute-name"/> <input class="form-control input-attribute" placeholder="Описание Атрибута" type="text" name="description"/> <input class="form-control input-attribute" placeholder="Номинальное значение Атрибута (Целое число)" type="number" name="number-attribute"/> <input class="form-control input-attribute" placeholder="Номинальное значение Атрибута (Дробное число - точность 2 после запятой)" type="number" name="double-2"/> <input class="form-control input-attribute" placeholder="Номинальное значение Атрибута (Дробное число - точность 15 после запятой)" type="number" name="double-15"/> <span class="span-attribute">Время начала</span> <input class="form-control input-attribute" placeholder="Время" type="time" name="time-first"/> <span class="span-attribute">Время окончания</span> <input class="form-control input-attribute" placeholder="Время" type="time" name="time-second"/> <input class="form-control input-attribute" placeholder="Текст Атрибута" type="text" name="attribute-text"/> <input class="form-control input-attribute" placeholder="Строковые данные" type="text" name="attribute-varchar"/> <input class="form-control input-attribute file-input" onchange="encodeImage(this)" type="file" name="attribute-file"/> <a class="link" id="image-data-' + categoryID + '" href=""></a> <span class="span-attribute">Да</span> <input class="form-control input-attribute input-radio-attribute" type="radio" name="attribute-bool" value="true" /> <span class="span-attribute">Нет</span> <input class="form-control input-attribute input-radio-attribute" type="radio" name="attribute-bool" value="false"/> <input class="form-control input-attribute" placeholder="IP адрес" type="text" name="attribute-ip"/> <input type="submit" class="create-button"  onclick="newAttributeForCat(event, ' + categoryID + ')"/></form> <hr style="width: 25%;"></div>');
         } else if(inputAttr.length != 0 && inputAttrDisp == 'block'){
             $('.input-div-' + categoryID).hide();
         } else if(inputAttr.length != 0 && inputAttrDisp == 'none'){
             $('.input-div-' + categoryID).show();
         }
     }
+
+    function newAttributeForSubj(event, subjectID){
+        event.preventDefault();
+        let subj = $('#subject-form-' + subjectID).children('input');
+        let createAttribute = 'subject';
+        let imgData = $('#image-data-subj-' + subjectID).attr('href');
+
+        $.ajax({
+            url: "{{ route('admin.create_attribute') }}",
+            type: 'POST',
+            data: {
+                attributeName: subj[0].value,
+                description: subj[1].value,
+                numberAttribute: subj[2].value,
+                double2: subj[3].value,
+                double15: subj[4].value,
+                timeFirst: subj[5].value,
+                timeSecond: subj[6].value,
+                attributeText: subj[7].value,
+                attributeVarchar: subj[8].value,
+                attributeFile: imgData,
+                attributeTrue: subj[10].checked,
+                attributeFalse: subj[11].checked,
+                attributeIP: subj[12].value,
+                createAttribute: createAttribute,
+                subjectID: subjectID
+
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: (data) => {
+                location.reload()
+            }
+        })
+    }
+
+
+
 
     function newAttributeForCat(event, categoryID){
         event.preventDefault();

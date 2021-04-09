@@ -41,8 +41,9 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['aut
     Route::get('/get_section_id_for_cat', [App\Http\Controllers\Admin\DashboardController::class, 'get_section_id_for_cat'])->name('admin.get_section_id_for_cat');
     Route::get('/get_section_id_for_edit', [App\Http\Controllers\Admin\DashboardController::class, 'get_section_id_for_edit'])->name('admin.get_section_id_for_edit');
     Route::post('/remove_subject', [App\Http\Controllers\Admin\DashboardController::class, 'remove_subject'])->name('admin.remove_subject');
+    Route::get('/subject_attributes_data', [App\Http\Controllers\Admin\DashboardController::class, 'subject_attributes_data'])->name('admin.subject_attributes_data');
     
-  
+
 });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

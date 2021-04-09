@@ -38,6 +38,15 @@ class DashboardController extends Controller
         return $attributes;
     }
 
+    public function subject_attributes_data(Request $request){
+        $user_id = Auth::user()->id;
+        $attributes = DB::table('attributes')->where([
+            ['subject_id', '=', $request->subjectID],
+            ['user_id', '=', $user_id],
+        ])->get();
+        return $attributes;
+    }
+
     public function index(Request $request) {
         $user_id = Auth::user()->id;
         if($request->ajax()){
@@ -198,6 +207,7 @@ class DashboardController extends Controller
                 DB::table('attributes')->insert(
                     array('user_id' => $user_id, 'category_id' => $categoryID, 'subject_id' => $subjectID, 'element_id' => $elementID, 'attribute_name' => $attributeName, 'attribute_description' => $description, 'attribute_int' => $numberAttribute, 'attribute_float' => $double2, 'attribute_double' => $double15, 'attribute_text' => $attributeText, 'attribute_varchar' => $attributeVarchar, 'attribute_img' => $attributeFile, 'attribute_bool' => $attribute_bool, 'attribute_IP' => $attributeIP, 'attribute_json' => $attributeJSON, 'created_at' => $date, 'updated_at' => $date, 'attribute_time_first' => $timeFirst, 'attribute_time_second' => $timeSecond)
                 );
+
                 return $request;
             }
         }
