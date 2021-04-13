@@ -1961,9 +1961,11 @@ Vue.component('menu-component', __webpack_require__(/*! ./components/MenuCompone
  */
 
 var app = new Vue({
-  el: '#app'
+  el: '#app',
+  data: {
+    message: 'message'
+  }
 });
-console.log('ok');
 
 /***/ }),
 

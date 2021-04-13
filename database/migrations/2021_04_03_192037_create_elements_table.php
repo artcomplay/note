@@ -16,7 +16,9 @@ class CreateElementsTable extends Migration
         Schema::create('elements', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->integer('subject_id');
+            $table->integer('parent_id');
+
+            $table->longText('complex_id');
                 
             $table->string('element_name');
 

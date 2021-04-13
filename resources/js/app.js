@@ -30,8 +30,9 @@ Vue.component('menu-component', require('./components/MenuComponent.vue').defaul
 
 const app = new Vue({
     el: '#app',
+    data: {
+      message: 'message'
+    }
 });
 
 
-
-console.log('ok');

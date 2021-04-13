@@ -5,33 +5,149 @@
         <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
 
             <div class="row">
-                <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                     <nav class="dash-vertical-menu">
-                        <ul class="sections">
-                            @foreach($sections as $section)
-                                <li id="section-id-{{ $section->id }}">
-                                    <a class="section-href" href="" onclick="sectionData(event, '{{ $section->name }}', '{{ $section->id }}')">
-                                        {{ $section->name }}
+                        <ul class="elements">
+                            @foreach($elements as $element)
+                                <li id="el-id-{{ $element->id }}">
+                                    <a class="section-href" href="" onclick="elementData(event, '{{ $element->id }}')">
+                                        {{ $element->element_name }}
                                     </a>
-                                    <i id="remove-section" class="fa fa-times remove-section" aria-hidden="true" onclick="removeSection(event, '{{ $section->name }}', '{{ $section->id }}')" title="Удалить раздел {{ $section->name }}"></i> <i title="Редактировать раздел" onclick="editElement('{{ $section->id }}', 1)" class="fa fa-pencil-square-o edit-element" aria-hidden="true"></i>
-                                    <div class="row edit-section" id="edit-section-{{ $section->id }}"></div>
+                                    <i title="Показать все" onclick="showAllElements(event, '{{ $element->id }}')" class="fa fa-bars show-all" aria-hidden="true"></i>
+                                    <i title="Удалить раздел {{ $element->element_name }}"                        onclick="getRemoveElements(event, '{{ $element->id }}')"  class="fa fa-times remove-element"         aria-hidden="true"  ></i>
+                                    <i title="Редактировать раздел {{ $element->element_name }}"                  onclick="inputEditID('{{ $element->id }}')" class="fa fa-pencil-square-o edit-element" aria-hidden="true" data-toggle="modal" data-target=".bd-edit-modal-lg"></i>
+                                    <i title="Создать дочерний элемент для раздела {{ $element->element_name }}"  onclick="inputID('{{ $element->complex_id }}')"     class="fa fa-sun-o new-element"            aria-hidden="true" data-toggle="modal" data-target=".bd-child-modal-lg"></i>
+                                    <ul class="elements" id="element-id-{{ $element->id }}"></ul>
                                 </li>
                             @endforeach
 
-                            <li><a href="" onclick="appendInput(event)">+ Добавить раздел</a></li>
+                            <li><a data-toggle="modal" data-target=".bd-example-modal-lg" >+ Добавить раздел</a></li>
                         </ul>
                     </nav>
                 </div>
 
-                <div class="main-block-section col-9 col-sm-9 col-md-9 col-lg-9 col-xl-9">
+                <!--<div class="main-block-section col-9 col-sm-9 col-md-9 col-lg-9 col-xl-9">
                     <body>
                         <div class="warning-block"></div>
                         <ul class="categories">
                             
                         </ul>
                     </body>
+                </div>-->
+
+                <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+
+                                        <div class="input-create-element">
+                                            <input type="text" class="element-name form-control" name="element-name" placeholder="Название раздела">
+                                            <input type="submit" class="btn btn-success" data-dismiss="modal" aria-label="Close" onclick="createNote(event, null)" value="Создать раздел">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
+                <div class="modal fade bd-child-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+
+                                        <div class="input-create-element">
+                                            <input type="text" class="element-name-complex form-control" name="element-name" placeholder="Название элемента">
+                                            <input type="submit" class="btn btn-success create-child" data-dismiss="modal" aria-label="Close" onclick="createNote(event, id)" value="Создать элемент">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="modal fade bd-edit-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+
+                                        <div class="input-create-element">
+                                            <input type="text" class="element-edit-name form-control" name="element-name" placeholder="Новое название элемента">
+                                            <input type="submit" class="btn btn-success edit-element" data-dismiss="modal" aria-label="Close" onclick="editElement(event, id)" value="Изменить">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="modal fade bd-attr-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+
+                                        <div class="input-create-attr-element">
+                                            <span class="span-attribute">Название атрибута</span>
+                                            <input class="element-attr-name form-control" placeholder="Название Атрибута" type="text" name="attribute-name"/>
+                                            <span class="span-attribute">Описание Атрибута</span>
+                                            <input class="element-attr-name form-control" placeholder="Описание" type="text" name="description"/>
+                                            <span class="span-attribute">Значение Атрибута (Целое число)</span>
+                                            <input class="element-attr-name form-control" placeholder="Номинальное значение" type="number" name="number-attribute"/> 
+                                            <span class="span-attribute">Значение Атрибута (Дробное число - точность 2 после запятой)</span>
+                                            <input class="element-attr-name form-control" placeholder="Номинальное значение" type="number" name="double-2"/> 
+                                            <span class="span-attribute">Значение Атрибута (Дробное число - точность 15 после запятой)</span>
+                                            <input class="element-attr-name form-control" placeholder="Номинальное значение" type="number" name="double-15"/> 
+                                            <span class="span-attribute">Время начала</span> 
+                                            <input class="element-attr-name form-control" placeholder="Время" type="time" name="time-first"/> 
+                                            <span class="span-attribute">Время окончания</span> 
+                                            <input class="element-attr-name form-control" placeholder="Время" type="time" name="time-second"/> 
+                                            <span class="span-attribute">Текст Атрибута</span>
+                                            <input class="element-attr-name form-control" placeholder="Текст" type="text" name="attribute-text"/>
+                                            <span class="span-attribute">Ссылка на источник</span>
+                                            <input class="element-attr-name form-control" placeholder="https://www.source.com" type="text" name="attribute-varchar"/> 
+                                            <input class="element-attr-name form-control file-input" onchange="encodeImage(this)" type="file" name="attribute-file"/> 
+                                            <a class="link"></a> 
+                                            <span class="span-attribute">Да</span> 
+                                            <input class="element-attr-name form-control input-radio-attribute" type="radio" name="attribute-bool" value="true" /> 
+                                            <span class="span-attribute">Нет</span> 
+                                            <input class="element-attr-name form-control input-radio-attribute" type="radio" name="attribute-bool" value="false"/> 
+                                            <span class="span-attribute">Пусто</span> 
+                                            <input class="element-attr-name form-control input-radio-attribute" type="radio" name="attribute-bool" value="null" checked/> 
+                                            <input class="element-attr-name form-control" placeholder="IP адрес" type="text" name="attribute-ip"/>
+                                            <input class="element-attr-name form-control attr-id" type="text" name="attrubute-id"/> 
+                                            <input type="submit" class="btn btn-success attr-element" data-dismiss="modal" aria-label="Close" onclick="createAttr(event, id)" value="Создать атрибут">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 
 
@@ -47,899 +163,275 @@
 @section('custom_js')
 <script>
 
-    /* ---- Edit Element ----*/
-    
+    function createAttr(event, elementID){
+        let child = $('.input-create-attr-element').children('input');
+        let inputArray = new Array();
+        for(let i = 0; i < child.length; i++){
 
-    function editElementSuccess(event, elementType, elementID){
-        event.preventDefault();
+            if(child[i].name == 'attribute-file'){
+                let val = $('.link').attr('href');
+                inputArray[child[i].name] = val;
+            } else if(child[i].name != null && child[i].type != 'submit' && child[i].type != 'radio'){ 
+                inputArray[child[i].name] = child[i].value;
 
-        let elementTypeNameGet = elementTypeName(elementType);
-        let editNameInput = $('#input-edit-' + elementTypeNameGet + '-' + elementID).val();
-        if(editNameInput != null && elementType != null && elementID != null){
-            $.ajax({
-                url: "{{ route('admin.edit_element') }}",
-                type: 'POST',
-                data: {
-                    elementID: elementID,
-                    elementType: elementType,
-                    editName: editNameInput
-                },
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: (data) => {
-                    if(elementType == 2){
-                        getSectionIdForEdit(event, elementID);
-                    } else if(elementType == 3){
-                        getCategoryIdForEdit(event, elementID);
-                    }
-                }
-            })
+            } else if(child[i].type == 'radio' && child[i].checked == true){
+                inputArray[child[i].name] = child[i].value;
+            }
         }
-    }
 
-
-
-
-    function updataSections(){
-        console.log('updataSections');
         $.ajax({
-            url: "{{ route('admin.dashboard') }}",
-            type: 'GET',
+            url: "{{ route('admin.create_attr') }}",
+            type: 'POST',
             data: {
-
+                attrubute_id: inputArray['attrubute-id'],
+                attribute_bool: inputArray['attribute-bool'],
+                attribute_file: inputArray['attribute-file'],
+                attribute_ip: inputArray['attribute-ip'],
+                attribute_name: inputArray['attribute-name'],
+                attribute_text: inputArray['attribute-text'],
+                attribute_varchar: inputArray['attribute-varchar'],
+                description: inputArray['description'],
+                double_2: inputArray['double-2'],
+                double_15: inputArray['double-15'],
+                number_attribute: inputArray['number-attribute'],
+                time_first: inputArray['time-first'],
+                time_second: inputArray['time-second']
             },
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: (data) => {
-                $('body').empty();
-                $('body').append(data);
+                elementData(event, elementID);
+            }
+        })
+
+    }
+
+    function editElement(event, elementID){
+        event.preventDefault();
+        elementID = Number(elementID);
+        let elementName = $('.element-edit-name').val();
+        $.ajax({
+            url: "{{ route('admin.edit_element') }}",
+            type: 'POST',
+            data: {
+                element_id: elementID,
+                element_name: elementName
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: (data) => {
+                let idParent = $('#el-id-' + elementID).parent().attr('id');
+                if(idParent == undefined){
+                    location.reload();
+                } else {
+                    elementID = idParent.replace('element-id-', '');
+                    elementData(event, elementID);
+                } 
             }
         })
     }
 
-
-
-    function showHideEdit(elementID, elementType){
-        
-        let elementTypeNameGet = elementTypeName(elementType);
-        
-        let el = $('#input-edit-' + elementTypeNameGet + '-' + elementID);
-
-        if(elementType == 1){
-            $('.edit-category').children().hide();
-            $('.edit-subject').children().hide();
-            $('.edit-element').children().hide();
-        } else if(elementType == 2){
-            $('.edit-section').children().hide();
-            $('.edit-subject').children().hide();
-            $('.edit-element').children().hide();
-        } else if(elementType == 3){
-            $('.edit-section').children().hide();
-            $('.edit-category').children().hide();
-            $('.edit-element').children().hide();
-        } else if(elementType == 3){
-            $('.edit-section').children().hide();
-            $('.edit-category').children().hide();
-            $('.edit-subject').children().hide();
-        }
-
-        if(el.length == 1 && el.css('display') == 'block'){
-            el.hide();
-            el.next().hide();
-        } else if(el.length == 1 && el.css('display') == 'none'){
-            $('.edit-section').children().hide();
-            $('.edit-category').children().hide();
-            $('.edit-subject').children().hide();
-            $('.edit-element').children().hide();
-            el.show();
-            el.next().show();
-        } else if(el.length == 0 && el.css('display') == undefined){
-            $('.edit-section').children().hide();
-            $('.edit-category').children().hide();
-            $('.edit-subject').children().hide();
-            $('.edit-element').children().hide();
-            $('#edit-' + elementTypeNameGet + '-' + elementID).append('<input class="form-control" id="input-edit-' + elementTypeNameGet + '-' + elementID + '" type="text"/><a href="" onclick="editElementSuccess(event, ' + elementType + ', ' + elementID + ')" class="create-button" >Изменить</a>');
-        } 
-    }
-
-    function editElement(elementID, elementType){
-        showHideEdit(elementID, elementType);
-    }
-
-    function elementTypeName(elementType){
-        let elType;
-        if(elementType == 1){
-            elType = 'section';
-        } else if(elementType == 2){
-            elType = 'category';
-        } else if(elementType == 3){
-            elType = 'subject';
-        } else if(elementType == 4){
-            elType = 'element';
-        }
-
-        return elType;
-    }
-
-
-    /* ---- Edit Element ----*/
-
-
-
-    /*---- Section ----*/
-
-    function attributesData(event, categoryID){
-        let attributesData;
-        $.ajax({
-            url: "{{ route('admin.attributes_data') }}",
-            type: 'GET',
-            data: {
-                categoryID: categoryID
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: (data) => {
-                if(data.length != 0){
-                    attributesData = data;
-                    
-                    if(data.length != 0){
-                        //console.log(attributesData);
-                        for(let i = 0; i < attributesData.length; i++){
-                            if(attributesData[i].attribute_name != null){
-                                $('#attributes-row-' + categoryID).append('<li title="Дата создания атрибута ' + attributesData[i].created_at + '. Дата обновления атрибута ' + attributesData[i].updated_at + '">' + attributesData[i].attribute_name + '</li>');
-                                if(attributesData[i].attribute_img != null){
-                                    $('#attributes-row-' + categoryID).append('<li style="width: 100%;"></li>');
-                                }
-                            }
-                            if(attributesData[i].attribute_description != null){
-                                $('#attributes-row-' + categoryID).append('<li>' + attributesData[i].attribute_description + '</li>');
-                            }
-                            if(attributesData[i].attribute_double != null){
-                                $('#attributes-row-' + categoryID).append('<li>' + attributesData[i].attribute_double + '</li>');
-                            }
-                            if(attributesData[i].attribute_float != null){
-                                $('#attributes-row-' + categoryID).append('<li>' + attributesData[i].attribute_float + '</li>');
-                            }
-                            if(attributesData[i].attribute_int != null){
-                                $('#attributes-row-' + categoryID).append('<li>' + attributesData[i].attribute_int + '</li>');
-                            }
-                            if(attributesData[i].attribute_text != null){
-                                $('#attributes-row-' + categoryID).append('<li>' + attributesData[i].attribute_text + '</li>');
-                            }
-                            if(attributesData[i].attribute_time_first != null){
-                                $('#attributes-row-' + categoryID).append('<li>' + attributesData[i].attribute_time_first + '</li>');
-                            }
-                            if(attributesData[i].attribute_time_second != null){
-                                $('#attributes-row-' + categoryID).append('<li>' + attributesData[i].attribute_time_second + '</li>');
-                            }
-                            if(attributesData[i].attribute_varchar != null){
-                                $('#attributes-row-' + categoryID).append('<li>' + attributesData[i].attribute_varchar + '</li>');
-                            }
-                            if(attributesData[i].attribute_img != null){
-                                $('#attributes-row-' + categoryID).append('<li class="li-image-attribute"><img class="attribute-image" data-toggle="modal" data-target="#bd-example-modal-lg-' + attributesData[i].id + '" src="' + attributesData[i].attribute_img + '"/></li>');
-                                $('#attributes-row-' + categoryID).append('<div id="bd-example-modal-lg-' + attributesData[i].id + '" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg"><div class="modal-content"> <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button><img class="modal-image" data-toggle="modal" data-target=".bd-example-modal-lg" src="' + attributesData[i].attribute_img + '"/></div></div></div>');
-                            }
-                            if(attributesData[i].created_at != null){
-                                //$('#attributes-row-' + categoryID).append('<li>' + attributesData[i].created_at + '</li>');
-                            }
-                            if(attributesData[i].updated_at != null){
-                                //$('#attributes-row-' + categoryID).append('<li>' + attributesData[i].updated_at + '</li>');
-                            }
-                            if(attributesData[i].attribute_bool != null && attributesData[i].attribute_bool == 1){
-                                $('#attributes-row-' + categoryID).append('<li>Да</li>');
-                            } else if(attributesData[i].attribute_bool != null && attributesData[i].attribute_bool == 0){
-                                $('#attributes-row-' + categoryID).append('<li>Нет</li>');
-                            }
-                            $('#attributes-row-' + categoryID).append('<li style="width: 100%;"></li>');
-                            
-                        }
-                    } else {
-                        
-                    }
-
-                } else{
-                    /*$('#attributes-row-' + categoryID).append('<li> Не содержится атрибутов </li>');*/
-                    
-                    $('#attributes-row-' + categoryID).append('<i title="Не содержится атрибутов" class="fa fa-circle-o circle-empty" aria-hidden="true">');
-                }
-            }
-        })
-    }
-
-    let isEven = function(someNumber) {
-        return (someNumber % 2 == 0) ? true : false;
-    };
-
-    function sectionData(event, sectionName, idSection){
+    function showAllElements(event, elementID){
         event.preventDefault();
+        elementID = Number(elementID);
+        let childUl = $('#element-id-' + elementID).children().length;
+        if(childUl == 0){
+            elementData(event, elementID);
+        }
         $.ajax({
-            url: "{{ route('admin.index') }}",
+            url: "{{ route('admin.get_remove_elements') }}",
             type: 'GET',
             data: {
-                sectionName: sectionName,
-                sectionId: idSection
+                element_id: elementID
             },
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: (data) => {
+                let elementsArray = new Array();
                 if(data.length != 0){
-                    $('.categories').empty();
-                    $('.warning-block').empty();
                     for(let i = 0; i < data.length; i++){
-                        let categoryName = data[i].category_name;
-                        let categoryId = data[i].id;
-                        let evenC = isEven(i);
-                        let ev;
-                        if(evenC == true){
-                            ev = 'bg-cat-gr';
-                        } else if(evenC == false){
-                            ev = 'bg-cat-wh';
-                        }
-                        $('.categories').append('<li id="li-' + categoryId + '" class="' +  ev + '"> <i class="fa fa-square cat-icon" aria-hidden="true"></i> <a href="" class="category-href" onclick="categoryData(event, ' + categoryId + ')" id="category-id-' + categoryId + '">' + categoryName + '</a><i id="remove-category" class="fa fa-times" aria-hidden="true" onclick="removeCategory(event, ' + categoryId +')" title="Удалить категорию ' + categoryName + '"></i> <i title="Редактировать категорию" onclick="editElement(' + categoryId + ', 2)" class="fa fa-pencil-square-o edit-element" aria-hidden="true"></i> <i id="new-subject" class="fa fa-cube cat-id-' + categoryId + '" aria-hidden="true" onclick="appendInputSubject(' + categoryId + ')" title="Создать предмет"></i> <i class="fa fa-puzzle-piece new-attribute ctg-id-' + categoryId + '" aria-hidden="true" onclick="appendInputAttributeForCat(' + categoryId + ')" title="Создать атрибут"></i> <div id="edit-category-' + categoryId + '" class="row edit-category"></div> <ul class="atr-st row" id="attributes-row-'+ categoryId +'"> </i></ul> <ul id="cat-' + categoryId + '" class="cat-data"></ul> </li>');
-                        attributesData(event, categoryId);
+                        elementsArray.push(data[i].id);
                     }
-                    $('.categories').append('<li><a href="" onclick="appendInputCategory(event, ' + idSection + ')">+ Добавить категорию</a></li>');
-                } else{
-                    $('.categories').empty();
-                    $('.warning-block').empty();
-                    $('.categories').append('<li class="alert alert-warning-section">Категории отсутствуют!</li><li><a href="" onclick="appendInputCategory(event, ' + idSection + ')">+ Добавить категорию</a></li>');
+                    if(elementsArray.length != 0){
+                        for(let j = 0; j < elementsArray.length; j++){
+                            showAllElements(event, elementsArray[j]);
+                        }
+                    }
+                }
+                if(elementsArray.length != 0){
+                    for(let k = 0; k < elementsArray.length; k++){
+                        showElements(event, elementsArray[k]);
+                    }
                 }
             }
         })
     }
 
-
-    function categoryData(event, categoryID){
+    function showElements(event, elementID){
         event.preventDefault();
-        let child = $('#cat-' + categoryID).children('.sbj-item');
-        let disp = $('#cat-' + categoryID).css('display');
-        let childDisp = $('#cat-' + categoryID).children('.sbj-item').css('display');
+        elementID = Number(elementID);
 
-        if(child.length != 0 && disp == 'none'){
-            $('#cat-' + categoryID).show();
-            $('#category-id-' + categoryID).prev().css('color', '#00801c45');
-        } else if(child.length != 0 && disp == 'block') {
-            $('#cat-' + categoryID).hide();
-            $('#category-id-' + categoryID).prev().css('color', '#8e55b14d');
-        } else if(child.length == 0 && childDisp == undefined && disp == 'block'){
-            $.ajax({
-                url: "{{ route('admin.category_data') }}",
-                type: 'GET',
-                data: {
-                    categoryID: categoryID,
-                },
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: (data) => {
-                    $('#category-id-' + categoryID).prev().css('color', '#00801c45');
-                    if(data.length != 0){
-                        $('#cat-' + categoryID).empty();
-                        $('.warning-block').empty();
-                        for(let i = 0; i < data.length; i++){
-                            let subjectName = data[i].subject_name;
-                            let subjectId = data[i].id;
-                            $('#cat-' + categoryID).append('<li id="sb-' + subjectId + '" class="sbj-item"> <i class="fa fa-circle sbj-icon" aria-hidden="true"></i> <a href="" class="subject-href" onclick="subjectData(event, ' + subjectId + ')" id="subject-id-' + subjectId + '">' + subjectName + '</a><i id="remove-subject" class="fa fa-times" aria-hidden="true" onclick="removeSubject(event, ' + subjectId +')" title="Удалить предмет ' + subjectName + '"></i> <i title="Редактировать предмет" onclick="editElement(' + subjectId + ', 3)" class="fa fa-pencil-square-o edit-element" aria-hidden="true"></i>  <i id="new-element" class="fa fa-sun-o" aria-hidden="true" onclick="appendInputElement(' + subjectId + ')" title="Создать элемент"></i> <i class="fa fa-puzzle-piece new-attribute sbj-id-' + subjectId + '" aria-hidden="true" onclick="appendInputAttributeForSubject(' + subjectId + ')" title="Создать атрибут"></i> <div id="edit-subject-' + subjectId + '" class="row edit-subject"></div>  <ul class="element-container" id="element-container-' + subjectId + '">  </ul> <div id="new-element-' + subjectId + '" class="row new-element"></div> <ul id="subject-attribute-' + subjectId + '" class="row subject-attribute"></ul> </li>');
-                            $('#cat-' + categoryID).filter(':last');
-                            getSubjectAttributes(subjectId);
-                        }
-                    } else {
-                        if($('.alert-warning-section').length == 0){
-                            $('#cat-' + categoryID).append('<li class="alert alert-warning-section">Предметы отсутствуют!</li>');
-                            $('#category-id-' + categoryID).prev().css('color', '#00801c45');
-                        } else if($('.alert-warning-section').length != 0){
-                            $('#cat-' + categoryID).empty();
-                            $('#category-id-' + categoryID).prev().css('color', '#8e55b14d');
-                        }
-
-                    }
-                }
-            })
-        }
-    }
-
-
-    function categoryDataUpdatе(categoryID){
         $.ajax({
-            url: "{{ route('admin.category_data') }}",
-            type: 'GET',
+            url: "{{ route('admin.show_elements') }}",
+            type: 'POST',
             data: {
-                categoryID: categoryID,
+                element_id: elementID
             },
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: (data) => {
-                $('#category-id-' + categoryID).prev().css('color', '#00801c45');
+                elementData(event, elementID);
+            }
+        })
+    }
+
+
+    function getRemoveElements(event, elementID){
+        event.preventDefault();
+        elementID = Number(elementID);
+        $.ajax({
+            url: "{{ route('admin.get_remove_elements') }}",
+            type: 'GET',
+            data: {
+                element_id: elementID
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: (data) => {
+                let elementsArray = new Array(); 
                 if(data.length != 0){
-                    $('#cat-' + categoryID).empty();
-                    $('.warning-block').empty();
                     for(let i = 0; i < data.length; i++){
-                        let subjectName = data[i].subject_name;
-                        let subjectId = data[i].id;
-                        $('#cat-' + categoryID).append('<li id="sb-' + subjectId + '" class="sbj-item"> <i class="fa fa-circle sbj-icon" aria-hidden="true"></i> <a href="" class="subject-href" onclick="subjectData(event, ' + subjectId + ')" id="subject-id-' + subjectId + '">' + subjectName + '</a><i id="remove-subject" class="fa fa-times" aria-hidden="true" onclick="removeSubject(event, ' + subjectId +')" title="Удалить предмет ' + subjectName + '"></i> <i title="Редактировать предмет" onclick="editElement(' + subjectId + ', 3)" class="fa fa-pencil-square-o edit-element" aria-hidden="true"></i>  <i id="new-element" class="fa fa-sun-o" aria-hidden="true" onclick="appendInputElement(' + subjectId + ')" title="Создать элемент"></i> <i class="fa fa-puzzle-piece new-attribute sbj-id-' + subjectId + '" aria-hidden="true" onclick="appendInputAttributeForSubject(' + subjectId + ')" title="Создать атрибут"></i> <div id="edit-subject-' + subjectId + '" class="row edit-subject"></div>  <ul class="element-container" id="element-container-' + subjectId + '">  </ul> <div id="new-element-' + subjectId + '" class="row new-element"></div> <ul id="subject-attribute-' + subjectId + '" class="row subject-attribute"></ul> </li>');
-                        $('#cat-' + categoryID).filter(':last');
-                        getSubjectAttributes(subjectId);
+                        elementsArray.push(data[i].id);
+                    }
+                    if(elementsArray.length != 0){
+                        for(let j = 0; j < elementsArray.length; j++){
+                            getRemoveElements(event, elementsArray[j]);
+                        }
+                    }
+                }
+                if(elementsArray.length != 0){
+                    for(let k = 0; k < elementsArray.length; k++){
+                        removeElement(event, elementsArray[k]);
+                    }
+                }
+                removeElement(event, elementID);
+                let idParent = $('#el-id-' + elementID).parent().attr('id');
+                if(idParent == undefined){
+                    location.reload();
+                } else {
+                    elementID = idParent.replace('element-id-', '');
+                    elementData(event, elementID);
+                }
+            }
+        })
+        
+    }
+
+    function removeElement(event, elementID){
+        event.preventDefault();
+        elementID = Number(elementID);
+
+        $.ajax({
+            url: "{{ route('admin.remove_element') }}",
+            type: 'POST',
+            data: {
+                element_id: elementID
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: (data) => {
+                elementData(event, elementID);
+            }
+        }) 
+    }
+
+    function createNote(event, complexID){
+        event.preventDefault();
+        let elementNameValue;
+        let parentID = null;
+        if(complexID == null){
+            elementNameValue = $('.element-name').val();
+            parentID = null;
+        } else if(complexID != null){
+            elementNameValue = $('.element-name-complex').val();
+            let array_id = complexID.split('-');
+            parentID = array_id[array_id.length - 1];
+        }
+        $.ajax({
+            url: "{{ route('admin.create_note') }}",
+            type: 'POST',
+            data: {
+                element_name: elementNameValue,
+                parent_id: parentID,
+                parent_complex_id: complexID
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: (data) => {
+                if(parentID == null){
+                    location.reload();
+                } else {
+                    elementData(event, parentID);
+                } 
+            }
+        })
+    }
+
+    function elementData(event, parentID){
+        parentID = Number(parentID);
+        event.preventDefault();
+        $.ajax({
+            url: "{{ route('admin.element_data') }}",
+            type: 'GET',
+            data: {
+                parent_id: parentID
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: (data) => {
+                if(data.length != 0){
+                    $('#element-id-' + parentID).empty();
+                    for(let i = 0; i < data.length; i++){
+                        let children = $('#element-id-' + parentID).children();
+                        let del = "'";
+                        $('#element-id-' + parentID).append('<li id="el-id-' + data[i].id + '"><a onclick="elementData(event, ' + data[i].id + ')">' + data[i].element_name + '</a> <i title="Показать все" onclick="showAllElements(event, ' + data[i].id + ')" class="fa fa-bars show-all" aria-hidden="true"></i> <i title="Удалить элемент ' + data[i].element_name + '" onclick="getRemoveElements(event, ' + data[i].id + ')"  class="fa fa-times remove-element" aria-hidden="true"  ></i> <i title="Редактировать раздел ' + data[i].element_name + '" onclick="inputEditID(' + data[i].id + ')" class="fa fa-pencil-square-o edit-element" aria-hidden="true" data-toggle="modal" data-target=".bd-edit-modal-lg"></i> <i title="Создать дочерний элемент для ' + data[i].element_name + '"  onclick="inputID(' + del + data[i].complex_id + del + ')" class="fa fa-sun-o new-element" aria-hidden="true" data-toggle="modal" data-target=".bd-child-modal-lg"></i> <i data-toggle="modal" data-target=".bd-attr-modal-lg" class="fa fa-puzzle-piece new-attribute" aria-hidden="true" onclick="inputAttrID(' + data[i].id + ')" title="Создать атрибут"></i> <ul class="elements" id="element-id-' + data[i].id + '"></ul></li>');
                     }
                 } else {
-                    if($('.alert-warning-section').length == 0){
-                        $('#cat-' + categoryID).append('<li class="alert alert-warning-section">Предметы отсутствуют!</li>');
-                        $('#category-id-' + categoryID).prev().css('color', '#00801c45');
-                    } else if($('.alert-warning-section').length != 0){
-                        $('#cat-' + categoryID).empty();
-                        $('#category-id-' + categoryID).prev().css('color', '#8e55b14d');
-                    }
+                    $('#element-id-' + parentID).empty();
+                    $('#element-id-' + parentID).append('<li><a class="empty-element">Не имеется элементов</a></li>')
                 }
             }
         })
     }
 
-    function getSubjectAttributes(subjectID){
-        let attributesData;
-        $.ajax({
-            url: "{{ route('admin.subject_attributes_data') }}",
-            type: 'GET',
-            data: {
-                subjectID: subjectID
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: (data) => {
-                if(data.length != 0){
-                    attributesData = data;
-                    if(data.length != 0){
-                        for(let i = 0; i < attributesData.length; i++){
-                            if(attributesData[i].attribute_name != null){
-                                $('#subject-attribute-' + subjectID).append('<li title="Дата создания атрибута ' + attributesData[i].created_at + '. Дата обновления атрибута ' + attributesData[i].updated_at + '">' + attributesData[i].attribute_name + '</li>');
-                                if(attributesData[i].attribute_img != null){
-                                    $('#subject-attribute-' + subjectID).append('<li style="width: 100%;"></li>');
-                                }
-                            }
-                            if(attributesData[i].attribute_description != null){
-                                $('#subject-attribute-' + subjectID).append('<li>' + attributesData[i].attribute_description + '</li>');
-                            }
-                            if(attributesData[i].attribute_double != null){
-                                $('#subject-attribute-' + subjectID).append('<li>' + attributesData[i].attribute_double + '</li>');
-                            }
-                            if(attributesData[i].attribute_float != null){
-                                $('#subject-attribute-' + subjectID).append('<li>' + attributesData[i].attribute_float + '</li>');
-                            }
-                            if(attributesData[i].attribute_int != null){
-                                $('#subject-attribute-' + subjectID).append('<li>' + attributesData[i].attribute_int + '</li>');
-                            }
-                            if(attributesData[i].attribute_text != null){
-                                $('#subject-attribute-' + subjectID).append('<li>' + attributesData[i].attribute_text + '</li>');
-                            }
-                            if(attributesData[i].attribute_time_first != null){
-                                $('#subject-attribute-' + subjectID).append('<li>' + attributesData[i].attribute_time_first + '</li>');
-                            }
-                            if(attributesData[i].attribute_time_second != null){
-                                $('#subject-attribute-' + subjectID).append('<li>' + attributesData[i].attribute_time_second + '</li>');
-                            }
-                            if(attributesData[i].attribute_varchar != null){
-                                $('#subject-attribute-' + subjectID).append('<li>' + attributesData[i].attribute_varchar + '</li>');
-                            }
-                            if(attributesData[i].attribute_img != null){
-                                $('#subject-attribute-' + subjectID).append('<li class="li-image-attribute"><img class="attribute-image" data-toggle="modal" data-target="#bd-example-modal-lg-' + attributesData[i].id + '" src="' + attributesData[i].attribute_img + '"/></li>');
-                                $('#subject-attribute-' + subjectID).append('<div id="bd-example-modal-lg-' + attributesData[i].id + '" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg"><div class="modal-content"> <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button><img class="modal-image" data-toggle="modal" data-target=".bd-example-modal-lg" src="' + attributesData[i].attribute_img + '"/></div></div></div>');
-                            }
-                            if(attributesData[i].created_at != null){
-                                //$('#attributes-row-' + categoryID).append('<li>' + attributesData[i].created_at + '</li>');
-                            }
-                            if(attributesData[i].updated_at != null){
-                                //$('#attributes-row-' + categoryID).append('<li>' + attributesData[i].updated_at + '</li>');
-                            }
-                            if(attributesData[i].attribute_bool != null && attributesData[i].attribute_bool == 1){
-                                $('#subject-attribute-' + subjectID).append('<li>Да</li>');
-                            } else if(attributesData[i].attribute_bool != null && attributesData[i].attribute_bool == 0){
-                                $('#subject-attribute-' + subjectID).append('<li>Нет</li>');
-                            }
-                            $('#subject-attribute-' + subjectID).append('<li style="width: 100%;"></li>');
-                        }
-                    } else {
-                        
-                    }
-
-                } else{
-                    /*$('#subject-attribute-' + subjectID).append('<li> Не содержится атрибутов </li>');*/
-                }
-            }
-        })
+    function inputID(complexID){
+        $('.create-child').attr('id', complexID);
     }
 
-    function subjectData(event, subjectID){
-        event.preventDefault();
-        $.ajax({
-            url: "{{ route('admin.subject_data') }}",
-            type: 'GET',
-            data: {
-                subjectID: subjectID,
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: (data) => {
-                if(data.length != 0){
-                    let subj = $('#element-container-' + subjectID).children();
-                    let subjDataStyle = $('#element-container-' + subjectID).children().css('display');
-                    if(subj.length == 0){
-                        for(let i = 0; i < data.length; i++){
-                            let element_name = data[i].element_name;
-                            let element_id = data[i].id;
-                            let subject_id = data[i].subject_id;
-                            $('#element-' + element_id).remove();
-                            $('#element-container-' + subject_id).append('<li id="element-' + element_id + '">' + element_name + ' <i id="remove-element" class="fa fa-times" aria-hidden="true" onclick="removeSubjectElement(event, ' + element_id + ')" title="Удалить элемент ' + element_name + '"></i> <i title="Редактировать элемент" onclick="editElement(' + element_id + ', 4)" class="fa fa-pencil-square-o edit-element" aria-hidden="true"></i> <i id="elem-edit-id-' + element_id + '" class="fa fa-puzzle-piece new-attribute" aria-hidden="true" onclick="appendInputAttributeForElement(' + element_id + ')" title="Создать атрибут"></i> <div id="edit-element-' + element_id + '" class="row edit-element"></div> </li>');
-                        }
-                    } else if(subj.length != 0 && subjDataStyle == 'block'){
-                        $('#element-container-' + subjectID).children().hide();
-                    } else if(subj.length != 0 && subjDataStyle == 'none'){
-                        $('#element-container-' + subjectID).children().show();
-                    }
-
-                } else {
-                    alert('Не имеется элементов!');
-                }
-            }
-        })
+    function inputEditID(elementID){
+        $('.edit-element').attr('id', elementID);
     }
 
-    function appendInputAttributeForElement(){
-        console.log('ok');
+    function inputAttrID(elementID){
+        $('.attr-element').attr('id', elementID);
+        $('.attr-id').attr('value', elementID)
     }
 
 
-    function removeSubjectElement(){
-
-    }
-
-    function appendInput(event){
-        event.preventDefault();
-        let inputSection =$('.sections').children('input');
-        if(inputSection.length == 0){
-            $('.sections').append('<input class="form-control" placeholder="Название Раздела" id="input-section" type="text" name="section-name"/> <a href="" class="create-button" onclick="newSection(event)">Создать</a>');
-        }
-    }
-
-    function appendInputCategory(event, idSecion){
-        event.preventDefault();
-        let inputSection =$('.categories').children('input');
-        if(inputSection.length == 0){
-            $('.categories').append('<input class="form-control" placeholder="Название Категории" id="input-category" type="text" name="section-name"/><a href="" class="create-button"  onclick="newCategory(event, ' + idSecion + ')">Создать</a>');
-        }
-    }
-
-    function newSection(event){
-        event.preventDefault();
-        let sN = $('#input-section').val();
-        $.ajax({
-            url: "{{ route('admin.create_section') }}",
-            type: 'POST',
-            data: {
-                section: sN,
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: (data) => {
-                updataSections()
-            }
-        })
-    }
-
-    let sName;
-    let sId;
-
-    function removeSectionSuccess(event){
-        event.preventDefault();
-        $.ajax({
-            url: "{{ route('admin.remove_section') }}",
-            type: 'POST',
-            data: {
-                section: sName,
-                sectionId: sId
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: (data) => {
-                updataSections()
-            }
-        })
-    }
-
-    function removeSectionCancel(){
-        $('.alert-warning-section').remove();
-    }
-
-    function removeSection(event, sectionName, sectionId){
-        event.preventDefault();
-        sName = sectionName;
-        sId = sectionId;
-        $('.warning-block').empty();
-        $('.warning-block').prepend('<div class="alert alert-warning-section" role="alert">Раздел " ' + sectionName + ' " и все связанные с ним данные будут удалены!<button type="button" class="btn btn-success-section" onclick="removeSectionSuccess(event)">Удалить</button><button type="button" class="btn btn-warning-section" onclick="removeSectionCancel()">Отмена</button></div>');
-    }
-
-    /*---- Section ----*/
-
-
-
-    /*---- Category ----*/
-
-    let cName;
-    let cId;
-
-    function removeCategory(event, categoryId){
-        event.preventDefault();
-        let catName = $('#category-id-' + categoryId).html();
-        cName = catName;
-        cId = categoryId;
-        $('.warning-block').empty();
-        $('.warning-block').prepend('<div class="alert alert-warning-section" role="alert">Категория " ' + catName + ' " и все связанные с ней данные будут удалены!<button type="button" class="btn btn-success-section" onclick="removeCategorySuccess(event, ' + categoryId + ')">Удалить</button><button type="button" class="btn btn-warning-section" onclick="removeCategoryCancel()">Отмена</button></div>');
-        $('html').scrollTop(0);
-    }
-
-    function removeCategorySuccess(event, categoryID){
-        event.preventDefault();
-        getSectionIdForCategory(event, categoryID);
-    }
-
-    function removeCategoryEnd(event, categoryID, sectionID){
-        $.ajax({
-            url: "{{ route('admin.remove_category') }}",
-            type: 'POST',
-            data: {
-                categoryID: categoryID,
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: (data) => {
-                getSectionName(event, sectionID);
-            }
-        })
-    }
-
-
-    function getSectionIdForCategory(event, categoryID){
-        $.ajax({
-            url: "{{ route('admin.get_section_id_for_cat') }}",
-            type: 'GET',
-            data: {
-                categoryID: categoryID
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: (data) => {
-                let sectionID = data[0].section_id;
-                removeCategoryEnd(event, categoryID, sectionID);
-            }
-        })
-    }
-
-    function getSectionIdForEdit(event, categoryID){
-        $.ajax({
-            url: "{{ route('admin.get_section_id_for_edit') }}",
-            type: 'GET',
-            data: {
-                categoryID: categoryID
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: (data) => {
-                let sectionID = data[0].section_id;
-                getSectionName(event, sectionID);
-            }
-        })
-    }
-
-
-    function removeCategoryCancel(){
-        $('.alert-warning-section').remove();
-    }
-
-
-
-    function getSectionName(event, sectionID){
-        $.ajax({
-            url: "{{ route('admin.get_section_name') }}",
-            type: 'GET',
-            data: {
-                sectionID: sectionID
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: (data) => {
-                let sectionName = data[0].name;
-                sectionData(event, sectionName, sectionID);
-            }
-        })
-    }
-
-
-
-    function newCategory(event, idSection){
-        event.preventDefault();
-        let cat = $('#input-category').val();
-        $.ajax({
-            url: "{{ route('admin.create_category') }}",
-            type: 'POST',
-            data: {
-                category: cat,
-                idSection: idSection
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: (data) => {
-                getSectionName(event, idSection);
-            }
-        })
-    }
-
-    /*---- Category ----*/
-
-
-
-    /*---- Subject ----*/
-
-    function removeSubjectSuccess(event, subjectID){
-        event.preventDefault();
-        getCategoryId(event, subjectID);
-    }
-
-    function getCategoryIdForEdit(event, subjectID){
-        let = parentEl = $('#sb-' + subjectID).parent();
-        parentID = parentEl[0].id;
-        parentID = parentID.replace('cat-', '');
-        let categoryID = Number(parentID);
-        $('#cat-' + categoryID).hide();
-        categoryData(event, categoryID);
-    }
-
-    function getCategoryId(event, subjectID){
-        let = parentEl = $('#sb-' + subjectID).parent();
-        parentID = parentEl[0].id;
-        parentID = parentID.replace('cat-', '');
-        let categoryID = Number(parentID);
-        
-        $.ajax({
-            url: "{{ route('admin.remove_subject') }}",
-            type: 'POST',
-            data: {
-                subjectID: subjectID,
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: (data) => {
-
-            }
-        })
-
-        //$('#cat-' + categoryID).hide();
-        //categoryData(event, categoryID);
-        categoryDataUpdatе(categoryID);
-
-    }
-
-    function removeSubject(event, subjectID){
-        event.preventDefault();
-        let subjName = $('#subject-id-' + subjectID).html();
-        $('.warning-block').empty();
-        $('.warning-block').prepend('<div class="alert alert-warning-section" role="alert">Предмет " ' + subjName + ' " и все связанные с ним данные будут удалены!<button type="button" class="btn btn-success-section" onclick="removeSubjectSuccess(event, ' + subjectID + ')">Удалить</button><button type="button" class="btn btn-warning-section" onclick="removeCategoryCancel()">Отмена</button></div>');
-        $('html').scrollTop(0);
-    }
-
-    function appendInputSubject(categoryID){
-        let inputAttr = $('.input-div-' + categoryID);
-        let inputAttrDisp = $('.input-div-' + categoryID).css('display');
-        let inputF = $('.input-subject').length;
-        if(inputAttr.length == 0 && inputAttrDisp == undefined || inputF == 0){
-            $('.form-div').remove();
-            $('#li-' + categoryID).append('<div class="form-div input-div-' + categoryID + '"><form><input class="form-control input-subject" placeholder="Название Предмета" id="input-subject-'+ categoryID +'" type="text" name="section-name"/><a href="" class="create-button" onclick="newSubject(event, ' + categoryID + ')">Создать</a></form></div>');
-        } else if(inputAttr.length != 0 && inputAttrDisp == 'block'){
-            $('.input-div-' + categoryID).hide();
-        } else if(inputAttr.length != 0 && inputAttrDisp == 'none'){
-            $('.input-div-' + categoryID).show();
-        }
-
-    }
-
-    function newSubject(event, categoryID){
-        event.preventDefault();
-        let subj = $('#input-subject-' + categoryID).val();
-        $.ajax({
-            url: "{{ route('admin.create_subject') }}",
-            type: 'POST',
-            data: {
-                subject: subj,
-                categoryID: categoryID
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: (data) => {
-                //$('#cat-' + categoryID).hide();
-                categoryDataUpdatе(categoryID);
-            }
-        })
-    }
-
-    /*---- Subject ----*/
-
-
-    /*---- Element ----*/
-
-
-
-    function newElementSuccess(event, subjectID){
-        event.preventDefault();
-        
-        let elementName = $('#input-new-element-' + subjectID).val();
-        //console.log(elementName);
-
-        $.ajax({
-            url: "{{ route('admin.create_element') }}",
-            type: 'POST',
-            data: {
-                subjectID: subjectID,
-                elementName: elementName
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: (data) => {
-                //location.reload()
-            }
-        })
-    }
-
-    function appendInputElement(subjectID){
-        let inputElem = $('#input-new-element-' + subjectID);
-        let inputElemDisp = $('#input-new-element-' + subjectID).css('display');
-
-        if(inputElem.length == 0 && inputElemDisp == undefined){
-            $('.input-new-element').next().remove();
-            $('.input-new-element').remove();
-            $('#new-element-' + subjectID).append('<input class="form-control input-new-element" id="input-new-element-' + subjectID + '" type="text"/><a href="" onclick="newElementSuccess(event, ' + subjectID + ')" class="create-button" >Создать элемент</a>');
-        } else if(inputElem.length != 0 && inputElemDisp == 'block'){
-            $('#input-new-element-' + subjectID).next().hide();
-            $('#input-new-element-' + subjectID).hide();
-        } else if(inputElem.length != 0 && inputElemDisp == 'none'){
-            $('#input-new-element-' + subjectID).next().show();
-            $('#input-new-element-' + subjectID).show();
-        }
-        
-    }
-
-    /*---- Element ----*/
-
-
-
-    /*---- Attribute ----*/
-
-    function appendInputAttributeForSubject(subjectID){
-        let inputAttrSubject = $('#input-div-subject-' + subjectID);
-        let inputAttrSubjectDisp = $('#input-div-subject-' + subjectID).css('display');
-        let inputS = $('#subject-form-' + subjectID).length;
-
-        if(inputAttrSubject.length == 0 && inputAttrSubjectDisp == undefined || inputS == 0){
-            $('.form-div-subject').remove();
-            $('#subject-attribute-' + subjectID).append('<div class="form-div subject-div" id="input-div-subject-' + subjectID + '"><form id="subject-form-' + subjectID + '"><input class="form-control input-attribute" placeholder="Название Атрибута" type="text" name="attribute-name"/> <input class="form-control input-attribute" placeholder="Описание Атрибута" type="text" name="description"/> <input class="form-control input-attribute" placeholder="Номинальное значение Атрибута (Целое число)" type="number" name="number-attribute"/> <input class="form-control input-attribute" placeholder="Номинальное значение Атрибута (Дробное число - точность 2 после запятой)" type="number" name="double-2"/> <input class="form-control input-attribute" placeholder="Номинальное значение Атрибута (Дробное число - точность 15 после запятой)" type="number" name="double-15"/> <span class="span-attribute">Время начала</span> <input class="form-control input-attribute" placeholder="Время" type="time" name="time-first"/> <span class="span-attribute">Время окончания</span> <input class="form-control input-attribute" placeholder="Время" type="time" name="time-second"/> <input class="form-control input-attribute" placeholder="Текст Атрибута" type="text" name="attribute-text"/> <input class="form-control input-attribute" placeholder="Строковые данные" type="text" name="attribute-varchar"/> <input class="form-control input-attribute file-input" onchange="encodeImage(this)" type="file" name="attribute-file"/> <a class="link" id="image-data-subj-' + subjectID + '" href=""></a> <span class="span-attribute">Да</span> <input class="form-control input-attribute input-radio-attribute" type="radio" name="attribute-bool" value="true" /> <span class="span-attribute">Нет</span> <input class="form-control input-attribute input-radio-attribute" type="radio" name="attribute-bool" value="false"/> <input class="form-control input-attribute" placeholder="IP адрес" type="text" name="attribute-ip"/> <input type="submit" class="create-button"  onclick="newAttributeForSubj(event, ' + subjectID + ')"/></form> <hr style="width: 25%;"></div>');
-        } else if(inputAttrSubject.length != 0 && inputAttrSubjectDisp == 'block'){
-            $('#input-div-subject-' + subjectID).hide();
-        } else if(inputAttrSubject.length != 0 && inputAttrSubjectDisp == 'none'){
-            $('#input-div-subject-' + subjectID).show();
-        }
-    }
-
-    function appendInputAttributeForCat(categoryID){
-        let inputAttr = $('.input-div-' + categoryID);
-        let inputAttrDisp = $('.input-div-' + categoryID).css('display');
-        let inputF = $('.input-attribute').length;
-
-        if(inputAttr.length == 0 && inputAttrDisp == undefined || inputF == 0){
-            $('.form-div').remove();
-            $('#li-' + categoryID).append('<div class="form-div category-div input-div-' + categoryID + '"><form id="category-form-' + categoryID + '"><input class="form-control input-attribute" placeholder="Название Атрибута" type="text" name="attribute-name"/> <input class="form-control input-attribute" placeholder="Описание Атрибута" type="text" name="description"/> <input class="form-control input-attribute" placeholder="Номинальное значение Атрибута (Целое число)" type="number" name="number-attribute"/> <input class="form-control input-attribute" placeholder="Номинальное значение Атрибута (Дробное число - точность 2 после запятой)" type="number" name="double-2"/> <input class="form-control input-attribute" placeholder="Номинальное значение Атрибута (Дробное число - точность 15 после запятой)" type="number" name="double-15"/> <span class="span-attribute">Время начала</span> <input class="form-control input-attribute" placeholder="Время" type="time" name="time-first"/> <span class="span-attribute">Время окончания</span> <input class="form-control input-attribute" placeholder="Время" type="time" name="time-second"/> <input class="form-control input-attribute" placeholder="Текст Атрибута" type="text" name="attribute-text"/> <input class="form-control input-attribute" placeholder="Строковые данные" type="text" name="attribute-varchar"/> <input class="form-control input-attribute file-input" onchange="encodeImage(this)" type="file" name="attribute-file"/> <a class="link" id="image-data-' + categoryID + '" href=""></a> <span class="span-attribute">Да</span> <input class="form-control input-attribute input-radio-attribute" type="radio" name="attribute-bool" value="true" /> <span class="span-attribute">Нет</span> <input class="form-control input-attribute input-radio-attribute" type="radio" name="attribute-bool" value="false"/> <input class="form-control input-attribute" placeholder="IP адрес" type="text" name="attribute-ip"/> <input type="submit" class="create-button"  onclick="newAttributeForCat(event, ' + categoryID + ')"/></form> <hr style="width: 25%;"></div>');
-        } else if(inputAttr.length != 0 && inputAttrDisp == 'block'){
-            $('.input-div-' + categoryID).hide();
-        } else if(inputAttr.length != 0 && inputAttrDisp == 'none'){
-            $('.input-div-' + categoryID).show();
-        }
-    }
-
-    function newAttributeForSubj(event, subjectID){
-        event.preventDefault();
-        let subj = $('#subject-form-' + subjectID).children('input');
-        let createAttribute = 'subject';
-        let imgData = $('#image-data-subj-' + subjectID).attr('href');
-
-        $.ajax({
-            url: "{{ route('admin.create_attribute') }}",
-            type: 'POST',
-            data: {
-                attributeName: subj[0].value,
-                description: subj[1].value,
-                numberAttribute: subj[2].value,
-                double2: subj[3].value,
-                double15: subj[4].value,
-                timeFirst: subj[5].value,
-                timeSecond: subj[6].value,
-                attributeText: subj[7].value,
-                attributeVarchar: subj[8].value,
-                attributeFile: imgData,
-                attributeTrue: subj[10].checked,
-                attributeFalse: subj[11].checked,
-                attributeIP: subj[12].value,
-                createAttribute: createAttribute,
-                subjectID: subjectID
-
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: (data) => {
-                location.reload()
-            }
-        })
-    }
-
-
-
-
-    function newAttributeForCat(event, categoryID){
-        event.preventDefault();
-        let subj = $('#category-form-' + categoryID).children('input');
-        let createAttribute = 'category';
-        let imgData = $('#image-data-' + categoryID).attr('href');
-
-        $.ajax({
-            url: "{{ route('admin.create_attribute') }}",
-            type: 'POST',
-            data: {
-                attributeName: subj[0].value,
-                description: subj[1].value,
-                numberAttribute: subj[2].value,
-                double2: subj[3].value,
-                double15: subj[4].value,
-                timeFirst: subj[5].value,
-                timeSecond: subj[6].value,
-                attributeText: subj[7].value,
-                attributeVarchar: subj[8].value,
-                attributeFile: imgData,
-                attributeTrue: subj[10].checked,
-                attributeFalse: subj[11].checked,
-                attributeIP: subj[12].value,
-                createAttribute: createAttribute,
-                categoryID: categoryID
-
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: (data) => {
-                location.reload()
-            }
-        })
-    }
-
-    /*---- Attribute ----*/
-
-    /* ---- Incode Image ----*/ 
 
     function encodeImage(element) {
         var file = element.files[0];
         var reader = new FileReader();
         reader.onloadend = function() {
-            $(".link").attr("href",reader.result);
+            $('.link').attr('href', reader.result);
         }
         reader.readAsDataURL(file);
     }

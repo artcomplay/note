@@ -5,6 +5,15 @@
 
 a{
   color: #3490dce6 !important;
+  cursor: pointer;
+}
+
+li{
+  -webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  -o-transition: all 1s ease;
+  -ms-transition: all 1s ease;
+  transition: all 1s ease;
 }
 
 .nav-side-menu {
@@ -168,7 +177,7 @@ a{
     font-family: Oswald, sans-serif;
   }
 
-  #remove-section, #remove-category, #remove-subject, #remove-element{
+  .remove-element{
     margin-left: 7px;
     color: #ffc69d66;
     cursor: pointer;
@@ -180,22 +189,20 @@ a{
     cursor: pointer;
   }
 
-  #new-subject, #new-element, .new-attribute{
-    margin-left: 10px;
-    cursor: pointer;
-  }
-
   #new-subject{
     color: #2fc5b152;
   }
 
-  #new-element{
-    color: #981bcc5c;
-
+  .new-element{
+    color: #ab236852;
+    margin-left: 7px;
+    cursor: pointer;
   }
 
   .new-attribute{
     color: #ea6a9966;
+    margin-left: 7px;
+    cursor: pointer;
   }
 
   .btn{
@@ -309,9 +316,6 @@ a{
     margin-left: 20px;
   }
 
-  .edit-section, .edit-element, .edit-category{
-    padding: 0px 0px 5px 5px;
-  }
 
   .attribute-image{
     width: 90px;
@@ -342,10 +346,6 @@ a{
     color: #ffc69de8;
     padding: 0px 11px;
     border-radius: 54px;
-  }
-
-  .new-element{
-    padding-left: 20px;
   }
 
   .element-container li{
@@ -399,4 +399,24 @@ a{
   }
 
 
+  /*--- New ---*/
 
+.empty-element{
+  color: #a0a0a0 !important;
+  font-size: 12px;
+}
+
+
+.show-all{
+  margin-left: 7px;
+  color: #27a79545;
+  cursor: pointer;
+}
+
+.input-create-element, .input-create-attr-element{
+  padding: 10px 65px 20px 10px;
+}
+
+.attr-id{
+  display: none !important;
+}

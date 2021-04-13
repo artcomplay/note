@@ -14,11 +14,172 @@ class DashboardController extends Controller
 {
     public function dashboard() {
         $user_id = Auth::user()->id;
-        $sections = DB::table('sections')->where([
+        $elements = DB::table('elements')->where([
             ['user_id', '=', $user_id],
+            ['parent_id', '=', 0],
         ])->get();
-        return view('admin.dashboard', ['sections' => $sections]);
+        return view('admin.dashboard', ['elements' => $elements]);
     }
+
+    public function create_note(Request $request){
+        if($request->ajax()){
+            if (Auth::user()){
+                $element_name = $request->element_name;
+                $parent_id = $request->parent_id;
+                $parent_complex_id = $request->parent_complex_id;
+                $user_id = Auth::user()->id;
+                $date = Carbon::now();
+                if($parent_id == null && $parent_complex_id == null){
+                    $parent_id = 0;
+                    $id_note = DB::table('elements')->insertGetId(
+                        array('element_name' => $element_name, 'parent_id' => $parent_id, 'complex_id' => $parent_id, 'user_id' => $user_id, 'created_at' => $date, 'updated_at' => $date)
+                    );
+                    $result = DB::update('update elements set complex_id = ? where id = ?', [ $id_note, $id_note ]);
+                } else if($parent_id != null){
+                    $id_note = DB::table('elements')->insertGetId(
+                        array('element_name' => $element_name, 'parent_id' => $parent_id, 'complex_id' => $parent_complex_id, 'user_id' => $user_id, 'created_at' => $date, 'updated_at' => $date)
+                    );
+                    $complex_id = $parent_complex_id . '-' . $id_note;
+                    $result = DB::update('update elements set complex_id = ? where id = ?', [ $complex_id, $id_note ]);
+                }
+
+                return $result;
+            }
+        } 
+    }
+
+    public function element_data(Request $request){
+        if($request->ajax()){
+            if (Auth::user()){
+                $user_id = Auth::user()->id;
+                $elements = DB::table('elements')->where([
+                    ['parent_id', '=', $request->parent_id],
+                    ['user_id', '=', $user_id],
+                ])->get();
+
+                return $elements;
+            }
+        }
+    }
+
+    public function remove_element(Request $request){
+        if($request->ajax()){
+            if (Auth::user()){
+                $element_id = $request->element_id;
+                $user_id = Auth::user()->id;
+                $result = DB::table('elements')->where('id', $element_id)->where('user_id',  $user_id)->delete();
+                return $result;
+            }
+        }
+    }
+
+    public function get_remove_elements(Request $request){
+        if($request->ajax()){
+            if (Auth::user()){
+                $element_id = $request->element_id;
+                $user_id = Auth::user()->id;
+                $elements = DB::table('elements')->where([
+                    ['parent_id', '=', $request->element_id],
+                    ['user_id', '=', $user_id],
+                ])->get();
+                return $elements;
+            }
+        }
+    }
+
+
+    public function show_elements(Request $request){
+        if($request->ajax()){
+            if (Auth::user()){
+                $element_id = $request->element_id;
+                return $element_id;
+            }
+        }
+    }
+
+
+
+
+    public function edit_element(Request $request){
+        if($request->ajax()){
+            if (Auth::user()){
+                $user_id = Auth::user()->id;
+                $date = Carbon::now();
+                $element_id = $request->element_id;
+                $name = $request->element_name;
+                $result = DB::update('update elements set element_name = ? where id = ?', [ $name, $element_id ]);
+            }
+        } 
+
+        return $result;
+    }
+
+
+
+    public function create_attr(Request $request){
+        if($request->ajax()){
+            if (Auth::user()){
+                $user_id = Auth::user()->id;
+                $date = Carbon::now();
+                $element_id = $request->attrubute_id;
+                $attribute_bool = $request->attribute_bool;
+                $attribute_file  = $request->attribute_file;
+                $attribute_ip = $request->attribute_ip;
+                $attribute_name = $request->attribute_name;
+                $attribute_text = $request->attribute_text;
+                $attribute_varchar = $request->attribute_varchar;
+                $description = $request->description;
+                $double_2 = $request->double_2;
+                $double_15 = $request->double_15;
+                $number_attribute = $request->number_attribute;
+                $time_first = $request->time_first;
+                $time_second = $request->time_second;
+                $attribute_json = null;
+                if($attribute_bool == true){
+                    $attribute_bool = 1;
+                } else if($attribute_bool == false){
+                    $attribute_bool = 0;
+                } else if($attribute_bool == null){
+                    $attribute_bool = null;
+                }
+                $id_note = DB::table('attributes')->insertGetId(
+                    array('user_id' => $user_id, 'element_id' => $element_id, 'attribute_name' => $attribute_name, 'attribute_description' => $description, 'created_at' => $date, 'updated_at' => $date)
+                );
+                $result = DB::table('attributes_value')->insert(
+                    array('user_id' => $user_id, 'attribute_id' => $id_note, 'attribute_time_first' => $time_first, 'attribute_time_second' => $time_second,  'attribute_int' => $number_attribute, 'attribute_float' => $double_2, 'attribute_double' => $double_15, 'attribute_text' => $attribute_text, 'attribute_varchar' => $attribute_varchar, 'attribute_img' => $attribute_file, 'attribute_bool' => $attribute_bool, 'attribute_IP' => $attribute_ip, 'attribute_json' => $attribute_json, 'created_at' => $date, 'updated_at' => $date)
+                );
+            }
+        } 
+
+        return $result;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public function category_data(Request $request){
         $user_id = Auth::user()->id;
@@ -213,28 +374,7 @@ class DashboardController extends Controller
         }
     }
 
-    public function edit_element(Request $request){
-        if($request->ajax()){
-            if (Auth::user()){
-                $user_id = Auth::user()->id;
-                $date = Carbon::now();
-                $element_id = $request->elementID;
-                $element_type = $request->elementType;
-                $name = $request->editName;
-                if($element_type == 1){
-                    $result = DB::update('update sections set name = ? where id = ?', [ $name, $element_id ]);
-                } else if($element_type == 2){
-                    $result = DB::update('update categories set category_name = ? where id = ?', [ $name, $element_id ]);
-                } else if($element_type == 3){
-                    $result = DB::update('update subjects set subject_name = ? where id = ?', [ $name, $element_id ] );
-                } else if($element_type == 4){
-                    $result = DB::update('update elements set element_name = ? where id = ?', [ $name, $element_id ] );
-                }
-            }
-        } 
 
-        return $result;
-    }
 
     public function subject_data(Request $request){
         if($request->ajax()){
