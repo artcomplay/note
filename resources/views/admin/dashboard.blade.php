@@ -148,11 +148,6 @@
                         </div>
                     </div>
                 </div>
-
-                
-
-
-
             </div>
         </div>
     </div>
@@ -435,8 +430,6 @@
         }
         reader.readAsDataURL(file);
     }
-
-    /* ---- Incode Image ----*/ 
 
 </script>
 
