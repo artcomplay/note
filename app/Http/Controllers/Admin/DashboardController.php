@@ -135,24 +135,92 @@ class DashboardController extends Controller
                 $time_first = $request->time_first;
                 $time_second = $request->time_second;
                 $attribute_json = null;
-                if($attribute_bool == true){
-                    $attribute_bool = 1;
-                } else if($attribute_bool == false){
-                    $attribute_bool = 0;
-                } else if($attribute_bool == null){
-                    $attribute_bool = null;
+                if($attribute_name != null){
+                    $id_note = DB::table('attributes')->insertGetId(
+                        array('user_id' => $user_id, 'element_id' => $element_id, 'attribute_name' => $attribute_name, 'attribute_description' => $description, 'created_at' => $date, 'updated_at' => $date)
+                    );
+                    if($time_first != null || $time_second != null || $number_attribute != null || $double_2 != null || $double_15 != null || $attribute_text != null || $attribute_varchar != null || $attribute_file != null || $attribute_ip != null || $attribute_bool != null){
+                        $result = DB::table('attributes_value')->insertGetId(
+                            array('user_id' => $user_id, 'attribute_id' => $id_note, 'attribute_time_first' => $time_first, 'attribute_time_second' => $time_second,  'attribute_int' => $number_attribute, 'attribute_float' => $double_2, 'attribute_double' => $double_15, 'attribute_text' => $attribute_text, 'attribute_varchar' => $attribute_varchar, 'attribute_img' => $attribute_file, 'attribute_bool' => $attribute_bool, 'attribute_IP' => $attribute_ip, 'attribute_json' => $attribute_json, 'created_at' => $date, 'updated_at' => $date)
+                        );
+                    } else {
+                        $result = null;
+                    }
+                } else {
+                    $result = null;
                 }
-                $id_note = DB::table('attributes')->insertGetId(
-                    array('user_id' => $user_id, 'element_id' => $element_id, 'attribute_name' => $attribute_name, 'attribute_description' => $description, 'created_at' => $date, 'updated_at' => $date)
-                );
-                $result = DB::table('attributes_value')->insert(
-                    array('user_id' => $user_id, 'attribute_id' => $id_note, 'attribute_time_first' => $time_first, 'attribute_time_second' => $time_second,  'attribute_int' => $number_attribute, 'attribute_float' => $double_2, 'attribute_double' => $double_15, 'attribute_text' => $attribute_text, 'attribute_varchar' => $attribute_varchar, 'attribute_img' => $attribute_file, 'attribute_bool' => $attribute_bool, 'attribute_IP' => $attribute_ip, 'attribute_json' => $attribute_json, 'created_at' => $date, 'updated_at' => $date)
-                );
+                return $result;
             }
         } 
-
-        return $result;
     }
+
+
+
+    public function get_attr(Request $request){
+        if($request->ajax()){
+            if (Auth::user()){
+                $element_id = $request->element_id;
+                $user_id = Auth::user()->id;
+                $attributes = DB::table('attributes')->where([
+                    ['element_id', '=', $element_id],
+                    ['user_id', '=', $user_id],
+                ])->get();
+
+                $attributes_values = null;
+                for($i = 0; $i < count($attributes); $i++){
+                    $attributes_values[$i] = DB::table('attributes_value')->where([
+                        ['attribute_id', '=', $attributes[$i]->id],
+                        ['user_id', '=', $user_id],
+                    ])->get();
+                    $count_attr = DB::table('attributes_value')->where([
+                        ['attribute_id', '=', $attributes[$i]->id],
+                        ['user_id', '=', $user_id],
+                    ])->count();
+                    $attributes_values[$i]['element_id'] = $element_id;
+                    $attributes_values[$i]['count_attr'] = $count_attr;
+                    $attributes_values[$i]['attribute_id'] = $attributes[$i]->id;
+                    $attributes_values[$i]['attribute_name'] = $attributes[$i]->attribute_name;
+                    $attributes_values[$i]['attribute_description'] = $attributes[$i]->attribute_description;
+                }
+                return $attributes_values;
+            }
+        }
+    }
+
+
+    public function edit_attr(Request $request){
+        if($request->ajax()){
+            if (Auth::user()){
+                $attrubute_id = $request->attrubute_id;
+                $attrubute_name = $request->attrubute_name;
+                $attribute_description = $request->attribute_description;
+                $result = DB::table('attributes')->where('id', $attrubute_id )->update(['attribute_name' => $attrubute_name, 'attribute_description' => $attribute_description]);
+                return $result;
+            }
+        }
+
+    }
+
+
+
+    public function get_complex_id(Request $request){
+        if($request->ajax()){
+            if (Auth::user()){
+                $user_id = Auth::user()->id;
+                $element = DB::table('elements')->where([
+                    ['id', '=', $request->element_id],
+                    ['user_id', '=', $user_id],
+                ])->get();
+
+                $elements = explode('-', $element[0]->complex_id);
+
+                return $elements;
+            }
+        }
+    }
+
+
+
 
 
 

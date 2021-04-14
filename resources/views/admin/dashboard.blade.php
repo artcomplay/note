@@ -101,6 +101,47 @@
                 </div>
 
 
+                <div class="modal fade bd-img-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <div class="big-img-attr"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade bd-attr-edit-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+
+
+                                        <div class="input-edit-attr">
+                                            <input class="element-attr-name form-control" placeholder="Новое название Атрибута" type="text" name="attribute-name"/>
+                                            <input class="element-attr-name form-control" placeholder="Новое описание" type="text" name="description"/>
+                                            <input type="submit" class="btn btn-success edit-attr-btn" data-dismiss="modal" aria-label="Close" onclick="editAttr(event, id)" value="Изменить атрибут">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
                 <div class="modal fade bd-attr-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
@@ -127,17 +168,17 @@
                                             <span class="span-attribute">Время окончания</span> 
                                             <input class="element-attr-name form-control" placeholder="Время" type="time" name="time-second"/> 
                                             <span class="span-attribute">Текст Атрибута</span>
-                                            <input class="element-attr-name form-control" placeholder="Текст" type="text" name="attribute-text"/>
+                                            <textarea class="element-attr-name form-control" placeholder="Текст" type="text" name="attribute-text"></textarea>
                                             <span class="span-attribute">Ссылка на источник</span>
                                             <input class="element-attr-name form-control" placeholder="https://www.source.com" type="text" name="attribute-varchar"/> 
                                             <input class="element-attr-name form-control file-input" onchange="encodeImage(this)" type="file" name="attribute-file"/> 
                                             <a class="link"></a> 
                                             <span class="span-attribute">Да</span> 
-                                            <input class="element-attr-name form-control input-radio-attribute" type="radio" name="attribute-bool" value="true" /> 
+                                            <input class="element-attr-name form-control input-radio-attribute" type="radio" name="attribute-bool" value="1" /> 
                                             <span class="span-attribute">Нет</span> 
-                                            <input class="element-attr-name form-control input-radio-attribute" type="radio" name="attribute-bool" value="false"/> 
+                                            <input class="element-attr-name form-control input-radio-attribute" type="radio" name="attribute-bool" value="0"/> 
                                             <span class="span-attribute">Пусто</span> 
-                                            <input class="element-attr-name form-control input-radio-attribute" type="radio" name="attribute-bool" value="null" checked/> 
+                                            <input class="element-attr-name form-control input-radio-attribute" type="radio" name="attribute-bool" value="" checked/> 
                                             <input class="element-attr-name form-control" placeholder="IP адрес" type="text" name="attribute-ip"/>
                                             <input class="element-attr-name form-control attr-id" type="text" name="attrubute-id"/> 
                                             <input type="submit" class="btn btn-success attr-element" data-dismiss="modal" aria-label="Close" onclick="createAttr(event, id)" value="Создать атрибут">
@@ -158,11 +199,67 @@
 @section('custom_js')
 <script>
 
+    function removeInputAttr(attrID){
+        console.log(attrID);
+    }
+
+    function editInputAttr(attrID, elementID){
+        attrID = attrID.replace('e-at-', '');
+        $('.edit-attr-btn').attr('id', 'edit-attr-' + attrID);
+        $('.input-edit-attr').attr('id', 'el-ed-art-' + elementID);
+    }
+
+    function editAttr(event, attrID){
+        event.preventDefault();
+        attrID = attrID.replace('edit-attr-', '');
+        let arEdit = $('.input-edit-attr').children('input.form-control');
+        let arEditEl = $('.input-edit-attr').attr('id');
+        let elementID = arEditEl.replace('el-ed-art-', '');
+
+        $.ajax({
+            url: "{{ route('admin.edit_attr') }}",
+            type: 'POST',
+            data: {
+                attrubute_id: attrID,
+                attrubute_name: arEdit[0].value,
+                attribute_description: arEdit[1].value
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: (data) => {
+                //elementData(event, elementID);
+                let complexID = getComplexID(event, elementID);
+                
+            }
+        })
+    }
+
+    function getComplexID(event, elementID){
+        event.preventDefault();
+        $.ajax({
+            url: "{{ route('admin.get_complex_id') }}",
+            type: 'GET',
+            data: {
+                element_id: elementID
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: (data) => {
+                if(data.length != 0){
+                    for(let i = 0; i < data.length; i++){
+                        elementData(event, data[i]);
+                    }
+                }
+            }
+        })
+    }
+
     function createAttr(event, elementID){
         let child = $('.input-create-attr-element').children('input');
         let inputArray = new Array();
         for(let i = 0; i < child.length; i++){
-
             if(child[i].name == 'attribute-file'){
                 let val = $('.link').attr('href');
                 inputArray[child[i].name] = val;
@@ -173,6 +270,7 @@
                 inputArray[child[i].name] = child[i].value;
             }
         }
+        let childText = $('.input-create-attr-element').children('textarea').val();
 
         $.ajax({
             url: "{{ route('admin.create_attr') }}",
@@ -183,7 +281,7 @@
                 attribute_file: inputArray['attribute-file'],
                 attribute_ip: inputArray['attribute-ip'],
                 attribute_name: inputArray['attribute-name'],
-                attribute_text: inputArray['attribute-text'],
+                attribute_text: childText,
                 attribute_varchar: inputArray['attribute-varchar'],
                 description: inputArray['description'],
                 double_2: inputArray['double-2'],
@@ -196,10 +294,99 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: (data) => {
-                elementData(event, elementID);
+                getComplexID(event, elementID);
+                //elementData(event, elementID);
             }
         })
+    }
 
+    function appendBigImg(el){
+        let img = $(el).children('img');
+        $('.big-img-attr').empty().append('<img class="big-img" src="' + img[0].currentSrc + '" />');
+    }
+
+    function attributeData(event, elementID){
+        $.ajax({
+            url: "{{ route('admin.get_attr') }}",
+            type: 'GET',
+            data: {
+                element_id: elementID
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: (data) => {
+                if(data.length != 0){
+                    for(let i = 0; i < data.length; i++){
+                        if(data[i]['attribute_name'] != null){
+                            $('#attr-el-' + elementID).append('<div class="attr-container" id="attr-div-' + data[i]['attribute_id'] + '"> <i id="r-at-' + data[i]['attribute_id'] + '" onclick="removeInputAttr(id)" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr" aria-hidden="true"></i> <i id="e-at-' + data[i]['attribute_id'] + '" onclick="editInputAttr(id, ' + elementID + ')" data-toggle="modal" data-target=".bd-attr-edit-modal-lg" class="fa fa-pencil-square-o edit-attr" aria-hidden="true"></i> <li class="attribute-title"><p>' + data[i]['attribute_name'] + '</p></li>');
+                        }
+                        if(data[i]['attribute_description'] != null){
+                            $('#attr-div-' + data[i]['attribute_id']).append('<li class="attribute-description"><p>' + data[i]['attribute_description'] + '</p></li>');
+                        }
+                            /* attribute_id = data[i]['attribute_id'] */
+                            /* element_id = data[i]['element_id']*/
+                            /* attribute_json = data[i][j]['attribute_json'] */   
+                            /* attribute_id = data[i][j]['attribute_id'] */
+                            /* created_at = data[i][j]['created_at'] */
+                            /* updated_at = data[i][j]['updated_at'] */
+
+                        for(let j = 0; j < data[i]['count_attr']; j++){
+                            if(data[i][j] != null){
+                                if(data[i][j]['id'] != null){
+                                    //console.log(data[i][j]['id']);
+                                }
+                                if(data[i][j]['element_id'] != null){
+                                    //console.log(data[i][j]['element_id']);
+                                }
+
+                                if(data[i][j]['attribute_img'] != null){
+                                    $('#attr-div-' + data[i]['attribute_id']).append('<li class="attribute-img" onclick="appendBigImg(this);"> <i id="r-at-' + data[i]['attribute_id'] + '" onclick="removeInputAttr(id)" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr" aria-hidden="true"></i> <i id="e-at-' + data[i]['attribute_id'] + '" onclick="editInputAttr(id, ' + elementID + ')" data-toggle="modal" data-target=".bd-attr-edit-modal-lg" class="fa fa-pencil-square-o edit-attr" aria-hidden="true"></i> <img data-toggle="modal" data-target=".bd-img-modal-lg" src="' + data[i][j]['attribute_img'] + '" /></li>');
+                                }
+
+                                if(data[i][j]['attribute_text'] != null){
+                                    $('#attr-div-' + data[i]['attribute_id']).append('<li class="attribute-text"> <i id="r-at-' + data[i]['attribute_id'] + '" onclick="removeInputAttr(id)" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr" aria-hidden="true"></i> <i id="e-at-' + data[i]['attribute_id'] + '" onclick="editInputAttr(id, ' + elementID + ')" data-toggle="modal" data-target=".bd-attr-edit-modal-lg" class="fa fa-pencil-square-o edit-attr" aria-hidden="true"></i> <p>' + data[i][j]['attribute_text'] + '</p></li>');
+                                }
+
+                                if(data[i][j]['attribute_varchar'] != null){
+                                    $('#attr-div-' + data[i]['attribute_id']).append('<li class="attribute-href"> <i id="r-at-' + data[i]['attribute_id'] + '" onclick="removeInputAttr(id)" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr" aria-hidden="true"></i> <i id="e-at-' + data[i]['attribute_id'] + '" onclick="editInputAttr(id, ' + elementID + ')" data-toggle="modal" data-target=".bd-attr-edit-modal-lg" class="fa fa-pencil-square-o edit-attr" aria-hidden="true"></i> <a href="' + data[i][j]['attribute_varchar'] + '">' + data[i]['attribute_name'] + '</a> <i class="fa fa-chevron-circle-right ch-href" aria-hidden="true"></i> </li>');
+                                }
+                                if(data[i][j]['attribute_time_first'] != null){
+                                    $('#attr-div-' + data[i]['attribute_id']).append('<li class="attribute-time-first"> <i id="r-at-' + data[i]['attribute_id'] + '" onclick="removeInputAttr(id)" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr" aria-hidden="true"></i> <i id="e-at-' + data[i]['attribute_id'] + '" onclick="editInputAttr(id, ' + elementID + ')" data-toggle="modal" data-target=".bd-attr-edit-modal-lg" class="fa fa-pencil-square-o edit-attr" aria-hidden="true"></i> <p>' + data[i][j]['attribute_time_first'] + '</p></li>');
+                                }
+                                if(data[i][j]['attribute_time_second'] != null){
+                                    $('#attr-div-' + data[i]['attribute_id']).append('<li class="attribute-time-second"> <i id="r-at-' + data[i]['attribute_id'] + '" onclick="removeInputAttr(id)" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr" aria-hidden="true"></i> <i id="e-at-' + data[i]['attribute_id'] + '" onclick="editInputAttr(id, ' + elementID + ')" data-toggle="modal" data-target=".bd-attr-edit-modal-lg" class="fa fa-pencil-square-o edit-attr" aria-hidden="true"></i> <p>' + data[i][j]['attribute_time_second'] + '</p></li>');
+                                }
+                                if(data[i][j]['attribute_int'] != null){
+                                    $('#attr-div-' + data[i]['attribute_id']).append('<li class="attribute-int"> <i id="r-at-' + data[i]['attribute_id'] + '" onclick="removeInputAttr(id)" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr" aria-hidden="true"></i> <i id="e-at-' + data[i]['attribute_id'] + '" onclick="editInputAttr(id, ' + elementID + ')" data-toggle="modal" data-target=".bd-attr-edit-modal-lg" class="fa fa-pencil-square-o edit-attr" aria-hidden="true"></i> <p>' + data[i][j]['attribute_int'] + '</p></li>');
+                                }
+                                if(data[i][j]['attribute_float'] != null){
+                                    $('#attr-div-' + data[i]['attribute_id']).append('<li class="attribute-float"> <i id="r-at-' + data[i]['attribute_id'] + '" onclick="removeInputAttr(id)" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr" aria-hidden="true"></i> <i id="e-at-' + data[i]['attribute_id'] + '" onclick="editInputAttr(id, ' + elementID + ')" data-toggle="modal" data-target=".bd-attr-edit-modal-lg" class="fa fa-pencil-square-o edit-attr" aria-hidden="true"></i> <p>' + data[i][j]['attribute_float'] + '</p></li>');
+                                }
+                                if(data[i][j]['attribute_double'] != null){
+                                    $('#attr-div-' + data[i]['attribute_id']).append('<li class="attribute-double"> <i id="r-at-' + data[i]['attribute_id'] + '" onclick="removeInputAttr(id)" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr" aria-hidden="true"></i> <i id="e-at-' + data[i]['attribute_id'] + '" onclick="editInputAttr(id, ' + elementID + ')" data-toggle="modal" data-target=".bd-attr-edit-modal-lg" class="fa fa-pencil-square-o edit-attr" aria-hidden="true"></i><p>' + data[i][j]['attribute_double'] + '</p></li>');
+                                }
+                                if(data[i][j]['attribute_bool'] != null){
+                                    if(data[i][j]['attribute_bool'] == 1){
+                                        $('#attr-div-' + data[i]['attribute_id']).append('<li class="attribute-bool-true"> <i id="r-at-' + data[i]['attribute_id'] + '" onclick="removeInputAttr(id)" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr" aria-hidden="true"></i> <i id="e-at-' + data[i]['attribute_id'] + '" onclick="editInputAttr(id, ' + elementID + ')" data-toggle="modal" data-target=".bd-attr-edit-modal-lg" class="fa fa-pencil-square-o edit-attr" aria-hidden="true"></i> <i class="fa fa-check-circle" aria-hidden="true"></i></li>');
+                                    } else if(data[i][j]['attribute_bool'] == 0){
+                                        $('#attr-div-' + data[i]['attribute_id']).append('<li class="attribute-bool-false"> <i id="r-at-' + data[i]['attribute_id'] + '" onclick="removeInputAttr(id)" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr" aria-hidden="true"></i> <i id="e-at-' + data[i]['attribute_id'] + '" onclick="editInputAttr(id, ' + elementID + ')" data-toggle="modal" data-target=".bd-attr-edit-modal-lg" class="fa fa-pencil-square-o edit-attr" aria-hidden="true"></i> <i class="fa fa-times-circle" aria-hidden="true"></i></li>');
+                                    }  
+                                }
+                                if(data[i][j]['attribute_IP'] != null){
+                                    $('#attr-div-' + data[i]['attribute_id']).append('<li class="attribute-ip"> <i id="r-at-' + data[i]['attribute_id'] + '" onclick="removeInputAttr(id)" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr" aria-hidden="true"></i> <i id="e-at-' + data[i]['attribute_id'] + '" onclick="editInputAttr(id, ' + elementID + ')" data-toggle="modal" data-target=".bd-attr-edit-modal-lg" class="fa fa-pencil-square-o edit-attr" aria-hidden="true"></i> <p>' + data[i][j]['attribute_IP'] + '</p></li>');
+                                }
+
+                            } else if(data[i][j] == null){
+                                break;
+                            }
+                        }
+                        $('#attr-el-' + elementID).append('</div>');
+                    }       
+                }
+                //elementData(event, elementID);
+            }
+        }) 
     }
 
     function editElement(event, elementID){
@@ -268,7 +455,6 @@
     function showElements(event, elementID){
         event.preventDefault();
         elementID = Number(elementID);
-
         $.ajax({
             url: "{{ route('admin.show_elements') }}",
             type: 'POST',
@@ -397,7 +583,8 @@
                     for(let i = 0; i < data.length; i++){
                         let children = $('#element-id-' + parentID).children();
                         let del = "'";
-                        $('#element-id-' + parentID).append('<li id="el-id-' + data[i].id + '"><a onclick="elementData(event, ' + data[i].id + ')">' + data[i].element_name + '</a> <i title="Показать все" onclick="showAllElements(event, ' + data[i].id + ')" class="fa fa-bars show-all" aria-hidden="true"></i> <i title="Удалить элемент ' + data[i].element_name + '" onclick="getRemoveElements(event, ' + data[i].id + ')"  class="fa fa-times remove-element" aria-hidden="true"  ></i> <i title="Редактировать раздел ' + data[i].element_name + '" onclick="inputEditID(' + data[i].id + ')" class="fa fa-pencil-square-o edit-element" aria-hidden="true" data-toggle="modal" data-target=".bd-edit-modal-lg"></i> <i title="Создать дочерний элемент для ' + data[i].element_name + '"  onclick="inputID(' + del + data[i].complex_id + del + ')" class="fa fa-sun-o new-element" aria-hidden="true" data-toggle="modal" data-target=".bd-child-modal-lg"></i> <i data-toggle="modal" data-target=".bd-attr-modal-lg" class="fa fa-puzzle-piece new-attribute" aria-hidden="true" onclick="inputAttrID(' + data[i].id + ')" title="Создать атрибут"></i> <ul class="elements" id="element-id-' + data[i].id + '"></ul></li>');
+                        $('#element-id-' + parentID).append('<li id="el-id-' + data[i].id + '"><a onclick="elementData(event, ' + data[i].id + ')">' + data[i].element_name + '</a> <i title="Показать все" onclick="showAllElements(event, ' + data[i].id + ')" class="fa fa-bars show-all" aria-hidden="true"></i> <i title="Удалить элемент ' + data[i].element_name + '" onclick="getRemoveElements(event, ' + data[i].id + ')"  class="fa fa-times remove-element" aria-hidden="true"  ></i> <i title="Редактировать раздел ' + data[i].element_name + '" onclick="inputEditID(' + data[i].id + ')" class="fa fa-pencil-square-o edit-element" aria-hidden="true" data-toggle="modal" data-target=".bd-edit-modal-lg"></i> <i title="Создать дочерний элемент для ' + data[i].element_name + '"  onclick="inputID(' + del + data[i].complex_id + del + ')" class="fa fa-sun-o new-element" aria-hidden="true" data-toggle="modal" data-target=".bd-child-modal-lg"></i> <i data-toggle="modal" data-target=".bd-attr-modal-lg" class="fa fa-puzzle-piece new-attribute" aria-hidden="true" onclick="inputAttrID(' + data[i].id + ')" title="Создать атрибут"></i> <ul class="attributes" id="attr-el-' + data[i].id + '"></ul> <ul class="elements" id="element-id-' + data[i].id + '"></ul></li>');
+                        attributeData(event, data[i].id);
                     }
                 } else {
                     $('#element-id-' + parentID).empty();

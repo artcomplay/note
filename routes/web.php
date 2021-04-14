@@ -34,7 +34,10 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['aut
     Route::post('/show_elements', [App\Http\Controllers\Admin\DashboardController::class, 'show_elements'])->name('admin.show_elements');
     Route::post('/edit_element', [App\Http\Controllers\Admin\DashboardController::class, 'edit_element'])->name('admin.edit_element');
     Route::post('/create_attr', [App\Http\Controllers\Admin\DashboardController::class, 'create_attr'])->name('admin.create_attr');
-    
+    Route::post('/edit_attr', [App\Http\Controllers\Admin\DashboardController::class, 'edit_attr'])->name('admin.edit_attr');
+    Route::get('/get_attr', [App\Http\Controllers\Admin\DashboardController::class, 'get_attr'])->name('admin.get_attr');
+    Route::get('/get_complex_id', [App\Http\Controllers\Admin\DashboardController::class, 'get_complex_id'])->name('admin.get_complex_id');
+          
       
 });
 
