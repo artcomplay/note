@@ -417,7 +417,7 @@ li{
   cursor: pointer;
 }
 
-.input-create-element, .input-create-attr-element, .input-edit-attr{
+.input-create-element, .input-create-attr-element, .input-edit-attr, .input-edit-value-attr, .input-create-value-attr{
   padding: 10px 65px 20px 10px;
 }
 
@@ -442,11 +442,11 @@ li{
   background: #efefef;
   padding: 5px 5px 5px 15px;
   border-radius: 3px;
-  margin-bottom: 7px;
+  margin: 0px 50px 7px 7px;
 }
 
 .attribute-img img{
-  height: 90px;
+  height: 75px;
   cursor: pointer;
 }
 
@@ -456,9 +456,10 @@ li{
 }
 
 .attribute-text{
-    border: 1px solid #80808024;
-    border-radius: 3px;
-    padding: 5px 15px 5px 15px;
+  border: 1px solid #80808024;
+  border-radius: 3px;
+  padding: 5px 15px 5px 15px;
+  margin: 3px 50px 3px 20px;
 }
 
 .attribute-text p{
@@ -523,5 +524,23 @@ li{
   cursor: pointer;
 }
 
+.edit-name-attr{
+  position: absolute;
+  color: #73bcc382 !important;
+  right: 25px;
+  cursor: pointer;
+}
 
+.edit-attr-value{
+  color: #e6caffeb !important;
+  position: absolute;
+  right: 25px;
+  cursor: pointer;
+}
 
+.value-attr-st{
+  position: absolute;
+  color: #3f8dd052 !important;
+  right: 75px;
+  cursor: pointer;
+}

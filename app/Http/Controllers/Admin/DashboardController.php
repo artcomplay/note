@@ -87,7 +87,6 @@ class DashboardController extends Controller
         }
     }
 
-
     public function show_elements(Request $request){
         if($request->ajax()){
             if (Auth::user()){
@@ -96,9 +95,6 @@ class DashboardController extends Controller
             }
         }
     }
-
-
-
 
     public function edit_element(Request $request){
         if($request->ajax()){
@@ -113,8 +109,6 @@ class DashboardController extends Controller
 
         return $result;
     }
-
-
 
     public function create_attr(Request $request){
         if($request->ajax()){
@@ -154,8 +148,6 @@ class DashboardController extends Controller
         } 
     }
 
-
-
     public function get_attr(Request $request){
         if($request->ajax()){
             if (Auth::user()){
@@ -187,7 +179,6 @@ class DashboardController extends Controller
         }
     }
 
-
     public function edit_attr(Request $request){
         if($request->ajax()){
             if (Auth::user()){
@@ -198,10 +189,7 @@ class DashboardController extends Controller
                 return $result;
             }
         }
-
     }
-
-
 
     public function get_complex_id(Request $request){
         if($request->ajax()){
@@ -218,6 +206,87 @@ class DashboardController extends Controller
             }
         }
     }
+
+    public function edit_value_attr(Request $request){
+        if($request->ajax()){
+            if (Auth::user()){
+                $user_id = Auth::user()->id;
+                $date = Carbon::now();
+                $id = $request->id;
+                $attrubute_id = $request->attrubute_id;
+                $attribute_bool = $request->attribute_bool;
+                $attribute_file  = $request->attribute_file;
+                $attribute_ip = $request->attribute_ip;
+                $attribute_text = $request->attribute_text;
+                $attribute_varchar = $request->attribute_varchar;
+                $double_2 = $request->double_2;
+                $double_15 = $request->double_15;
+                $number_attribute = $request->number_attribute;
+                $time_first = $request->time_first;
+                $time_second = $request->time_second;
+                $attribute_json = null;
+                //$result = DB::table('attributes_value')->where(['attribute_id' => $attrubute_id, 'user_id' => $user_id, 'id' => $id])->update(['attribute_bool' => $attribute_bool, 'attribute_img' => $attribute_file, 'attribute_ip' => $attribute_ip, 'attribute_text' => $attribute_text, 'attribute_varchar' => $attribute_varchar, 'attribute_float' => $double_2, 'attribute_double' => $double_15, 'attribute_int' => $number_attribute, 'attribute_time_first' => $time_first, 'attribute_time_second' => $time_second, 'attribute_json' => $attribute_json, 'updated_at' => $date]);
+                $result = DB::table('attributes_value')->where(['id' => $id , 'user_id' => $user_id, 'attribute_id' => $attrubute_id])->update(['attribute_bool' => $attribute_bool, 'attribute_img' => $attribute_file, 'attribute_ip' => $attribute_ip, 'attribute_text' => $attribute_text, 'attribute_varchar' => $attribute_varchar, 'attribute_float' => $double_2, 'attribute_double' => $double_15, 'attribute_int' => $number_attribute, 'attribute_time_first' => $time_first, 'attribute_time_second' => $time_second, 'attribute_json' => $attribute_json, 'updated_at' => $date]);
+                return $result;
+            }
+        }
+    }
+
+    public function remove_attr(Request $request){
+        if($request->ajax()){
+            if (Auth::user()){
+                $user_id = Auth::user()->id;
+                $attr_id = $request->attr_id;
+                if($request->attr_type == 'main'){
+                    $result = DB::table('attributes_value')->where('attribute_id', $attr_id)->where('user_id',  $user_id)->delete();
+                    $result = DB::table('attributes')->where('id', $attr_id)->where('user_id',  $user_id)->delete();
+                } else if($request->attr_type == 'value'){
+                    $result = DB::table('attributes_value')->where('id', $attr_id)->where('user_id',  $user_id)->delete();
+                }
+            }
+            return $result;
+        }
+    }
+
+
+    public function create_attr_value(Request $request){
+        if($request->ajax()){
+            if (Auth::user()){
+                $user_id = Auth::user()->id;
+                $date = Carbon::now();
+                $attribute_id = $request->attrubute_id;
+                $attribute_bool = $request->attribute_bool;
+                $attribute_file  = $request->attribute_file;
+                $attribute_ip = $request->attribute_ip;
+                $attribute_text = $request->attribute_text;
+                $attribute_varchar = $request->attribute_varchar;
+                $double_2 = $request->double_2;
+                $double_15 = $request->double_15;
+                $number_attribute = $request->number_attribute;
+                $time_first = $request->time_first;
+                $time_second = $request->time_second;
+                $attribute_json = null;
+                if($time_first != null || $time_second != null || $number_attribute != null || $double_2 != null || $double_15 != null || $attribute_text != null || $attribute_varchar != null || $attribute_file != null || $attribute_ip != null || $attribute_bool != null){
+                    $result = DB::table('attributes_value')->insertGetId(
+                        array('user_id' => $user_id, 'attribute_id' => $attribute_id, 'attribute_time_first' => $time_first, 'attribute_time_second' => $time_second,  'attribute_int' => $number_attribute, 'attribute_float' => $double_2, 'attribute_double' => $double_15, 'attribute_text' => $attribute_text, 'attribute_varchar' => $attribute_varchar, 'attribute_img' => $attribute_file, 'attribute_bool' => $attribute_bool, 'attribute_IP' => $attribute_ip, 'attribute_json' => $attribute_json, 'created_at' => $date, 'updated_at' => $date)
+                    );
+                } else {
+                    $result = null;
+                }
+                return $result;
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
 
 
 
