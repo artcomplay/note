@@ -284,7 +284,7 @@ class DashboardController extends Controller
             if (Auth::user()){
                 $user_id = Auth::user()->id;
                 $elements = DB::table('elements')->where([
-                    ['element_name', 'LIKE', $request->value_text.'%' ],
+                    ['element_name', 'LIKE', '%' . $request->value_text .'%' ],
                     ['user_id', '=', $user_id],
                 ])->get();
 

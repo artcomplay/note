@@ -2488,9 +2488,11 @@ $('#search-element').keyup(function () {
     success: function success(data) {
       if (data.length != null) {
         for (var _i = 0; _i < data.length; _i++) {
-          // let complex = data[i].complex_id;
+          $('.result-search').empty(); // let complex = data[i].complex_id;
           // complex = complex.split('-')
-          console.log(data.length);
+
+          var sp = "'";
+          $('.result-search').append('<li><i class="fa fa-hand-o-right hand-right" aria-hidden="true"></i><a onclick="showResultSearch(event, ' + sp + data[_i].complex_id + sp + ')">' + data[_i].element_name + '</a></li>'); //console.log(data.length);
         }
       }
     }

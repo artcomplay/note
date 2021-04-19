@@ -70,9 +70,12 @@ $('#search-element').keyup(function(){
     success: (data) => {
       if(data.length != null){
         for(let i = 0; i < data.length; i++){
+          $('.result-search').empty();
           // let complex = data[i].complex_id;
           // complex = complex.split('-')
-          console.log(data.length);
+          let sp = "'";
+          $('.result-search').append('<li><i class="fa fa-hand-o-right hand-right" aria-hidden="true"></i><a onclick="showResultSearch(event, ' + sp + data[i].complex_id + sp + ')">' + data[i].element_name + '</a></li>')
+          //console.log(data.length);
         }
       }
     }

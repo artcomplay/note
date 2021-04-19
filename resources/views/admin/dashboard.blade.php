@@ -9,6 +9,7 @@
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                     <nav class="dash-vertical-menu">
                     <i class="fa fa-search search-input-i" aria-hidden="true"></i><input id="search-element" class="search-input form-control" placeholder="Поиск по сайту" type="text" name="search">
+                    <div><ul class="result-search"></ul></div>
                         <ul class="elements">
                             @foreach($elements as $element)
                                 <li id="el-id-{{ $element->id }}">
@@ -281,12 +282,19 @@
         </div>
     </div>
 
+    
 
 @endsection
 
 @section('custom_js')
  <script>
 
+    function showResultSearch(event, complexID){
+        complexID = complexID.split('-');
+        for(let i = 0; i < complexID.length; i++){
+            elementData(event, complexID[i]);
+        }
+    }
                                                      
     function removeInputAttr(attrID, elementID){
         let mainAttr = attrID.replace('r-at-main-', '');
@@ -523,9 +531,20 @@
                     for(let i = 0; i < data.length; i++){
                         if(data[i]['attribute_name'] != null){
                             $('#attr-el-' + elementID).append('<div class="attr-container" id="attr-div-' + data[i]['attribute_id'] + '"> <i onclick="createInputAttr(' + data[i]['attribute_id'] + ', ' + elementID + ')" data-target=".bd-attr-create-val-modal-lg" data-toggle="modal" title="Добавить значение для атрибута" class="fa fa-plus-circle value-attr-st" aria-hidden="true"></i> <i title="Удалить атрибут" id="r-at-main-' + data[i]['attribute_id'] + '" onclick="removeInputAttr(id, ' + data[i]['element_id'] + ')" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr" aria-hidden="true"></i> <i></i> <i  id="e-at-' + data[i]['attribute_id'] + '" onclick="editInputAttr(id, ' + elementID + ')" data-toggle="modal" data-target=".bd-attr-edit-modal-lg" title="Изменить название и описание" class="fa fa-pencil edit-name-attr" aria-hidden="true"></i> <li class="attribute-title"><p>' + data[i]['attribute_name'] + '</p></li>');
+                            $('#attr-div-' + data[i]['attribute_id']).append('<div id="desc-attr-' + data[i]['attribute_id'] + '"></div>');
+                            $('#attr-div-' + data[i]['attribute_id']).append('<ul id="table-img-' + data[i]['attribute_id'] + '"></ul>');
+                            $('#attr-div-' + data[i]['attribute_id']).append('<ul id="table-int-' + data[i]['attribute_id'] + '"></ul>');
+                            $('#attr-div-' + data[i]['attribute_id']).append('<ul id="table-float-' + data[i]['attribute_id'] + '"></ul>');
+                            $('#attr-div-' + data[i]['attribute_id']).append('<ul id="table-double-' + data[i]['attribute_id'] + '"></ul>');
+                            $('#attr-div-' + data[i]['attribute_id']).append('<ul id="table-text-' + data[i]['attribute_id'] + '"></ul>');
+                            $('#attr-div-' + data[i]['attribute_id']).append('<ul id="table-varchar-' + data[i]['attribute_id'] + '"></ul>');
+                            $('#attr-div-' + data[i]['attribute_id']).append('<ul id="table-time-first-' + data[i]['attribute_id'] + '"></ul>');
+                            $('#attr-div-' + data[i]['attribute_id']).append('<ul id="table-time-second-' + data[i]['attribute_id'] + '"></ul>');
+                            $('#attr-div-' + data[i]['attribute_id']).append('<ul id="table-bool-' + data[i]['attribute_id'] + '"></ul>');
+                            $('#attr-div-' + data[i]['attribute_id']).append('<ul id="table-ip-' + data[i]['attribute_id'] + '"></ul>');
                         }
                         if(data[i]['attribute_description'] != null){
-                            $('#attr-div-' + data[i]['attribute_id']).append('<li class="attribute-description"><p>' + data[i]['attribute_description'] + '</p></li>');
+                            $('#desc-attr-' + data[i]['attribute_id']).append('<li class="attribute-description"><p>' + data[i]['attribute_description'] + '</p></li>');
                         }
                             /* attribute_id = data[i]['attribute_id'] */
                             /* element_id = data[i]['element_id'] */
@@ -535,46 +554,59 @@
                             /* updated_at = data[i][j]['updated_at'] */
                         for(let j = 0; j < data[i]['count_attr']; j++){
                             if(data[i][j] != null){
-                                if(data[i][j]['id'] != null){
-                                    //console.log(data[i][j]['id']);
-                                    $('#attr-div-' + data[i]['attribute_id']).append('<i title="Удалить значение атрибута " id="r-at-' + data[i][j]['id'] + '" onclick="removeInputAttr(id, ' + data[i]['element_id'] + ')" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr" aria-hidden="true"></i> <i title="Изменить значение атрибута" id="e-v-at-' + data[i]['attribute_id'] + '" onclick="editValInputAttr(id, ' + elementID + ', ' + data[i][j]['id'] + ')" data-toggle="modal" data-target=".bd-attr-edit-value-modal-lg" class="fa fa-pencil edit-attr-value" aria-hidden="true"></i>');
-                                }
                                 if(data[i][j]['element_id'] != null){
                                     //console.log(data[i][j]['element_id']);
                                 }
                                 if(data[i][j]['attribute_img'] != null){
-                                    $('#attr-div-' + data[i]['attribute_id']).append('<li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-img" onclick="appendBigImg(this);">  <img data-toggle="modal" data-target=".bd-img-modal-lg" src="' + data[i][j]['attribute_img'] + '" /></li>');
+                                    $('#table-img-' + data[i]['attribute_id']).append('<li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-img" onclick="appendBigImg(this);">  <img id="table-img-' + data[i][j]['id'] + '" data-toggle="modal" data-target=".bd-img-modal-lg" src="' + data[i][j]['attribute_img'] + '" /></li>');
                                 }
                                 if(data[i][j]['attribute_text'] != null){
-                                    $('#attr-div-' + data[i]['attribute_id']).append('<li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-text"> <p>' + data[i][j]['attribute_text'] + '</p></li>');
+                                    $('#table-text-' + data[i]['attribute_id']).append('<i title="Изменить значение атрибута" id="e-v-at-' + data[i]['attribute_id'] + '" onclick="editValInputAttr(id, ' + elementID + ', ' + data[i][j]['id'] + ')" data-toggle="modal" data-target=".bd-attr-edit-value-modal-lg" class="fa fa-pencil edit-attr-value" aria-hidden="true"></i><i title="Удалить значение атрибута " id="r-at-' + data[i][j]['id'] + '" onclick="removeInputAttr(id, ' + data[i]['element_id'] + ')" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr" aria-hidden="true"></i><li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-text"> <p id="table-text-' + data[i][j]['id'] + '">' + data[i][j]['attribute_text'] + '</p></li>');
                                 }
                                 if(data[i][j]['attribute_varchar'] != null){
-                                    $('#attr-div-' + data[i]['attribute_id']).append('<li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-href"> <a href="' + data[i][j]['attribute_varchar'] + '">' + data[i]['attribute_name'] + '</a> <i class="fa fa-chevron-circle-right ch-href" aria-hidden="true"></i> </li>');
+                                    $('#table-varchar-' + data[i]['attribute_id']).append('<i title="Изменить значение атрибута" id="e-v-at-' + data[i]['attribute_id'] + '" onclick="editValInputAttr(id, ' + elementID + ', ' + data[i][j]['id'] + ')" data-toggle="modal" data-target=".bd-attr-edit-value-modal-lg" class="fa fa-pencil edit-attr-value" aria-hidden="true"></i><i title="Удалить значение атрибута " id="r-at-' + data[i][j]['id'] + '" onclick="removeInputAttr(id, ' + data[i]['element_id'] + ')" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr" aria-hidden="true"></i><li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-href"> <a id="table-varchar-' + data[i][j]['id'] + '"  href="' + data[i][j]['attribute_varchar'] + '">' + data[i]['attribute_name'] + '</a> <i class="fa fa-chevron-circle-right ch-href" aria-hidden="true"></i> </li>');
                                 }
                                 if(data[i][j]['attribute_time_first'] != null){
-                                    $('#attr-div-' + data[i]['attribute_id']).append('<li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-time-first"> <p>Время начала: ' + data[i][j]['attribute_time_first'] + '</p></li>');
+                                    $('#table-time-first-' + data[i]['attribute_id']).append('<i title="Изменить значение атрибута" id="e-v-at-' + data[i]['attribute_id'] + '" onclick="editValInputAttr(id, ' + elementID + ', ' + data[i][j]['id'] + ')" data-toggle="modal" data-target=".bd-attr-edit-value-modal-lg" class="fa fa-pencil edit-attr-value" aria-hidden="true"></i><i title="Удалить значение атрибута " id="r-at-' + data[i][j]['id'] + '" onclick="removeInputAttr(id, ' + data[i]['element_id'] + ')" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr" aria-hidden="true"></i><li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-time-first"> <p id="table-time-first-' + data[i][j]['id'] + '">Время начала: ' + data[i][j]['attribute_time_first'] + '</p></li>');
                                 }
                                 if(data[i][j]['attribute_time_second'] != null){
-                                    $('#attr-div-' + data[i]['attribute_id']).append('<li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-time-second"> <p>Время окончания: ' + data[i][j]['attribute_time_second'] + '</p></li>');
+                                    $('#table-time-second-' + data[i]['attribute_id']).append('<i title="Изменить значение атрибута" id="e-v-at-' + data[i]['attribute_id'] + '" onclick="editValInputAttr(id, ' + elementID + ', ' + data[i][j]['id'] + ')" data-toggle="modal" data-target=".bd-attr-edit-value-modal-lg" class="fa fa-pencil edit-attr-value" aria-hidden="true"></i><i title="Удалить значение атрибута " id="r-at-' + data[i][j]['id'] + '" onclick="removeInputAttr(id, ' + data[i]['element_id'] + ')" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr" aria-hidden="true"></i><li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-time-second"> <p id="table-time-second-' + data[i][j]['id'] + '">Время окончания: ' + data[i][j]['attribute_time_second'] + '</p></li>');
                                 }
                                 if(data[i][j]['attribute_int'] != null){
-                                    $('#attr-div-' + data[i]['attribute_id']).append('<li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-int"> <p>' + data[i][j]['attribute_int'] + '</p></li>');
+                                    $('#table-int-' + data[i]['attribute_id']).append('<li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-int"> <p id="table-int-' + data[i][j]['id'] + '">' + data[i][j]['attribute_int'] + '</p></li>');
                                 }
                                 if(data[i][j]['attribute_float'] != null){
-                                    $('#attr-div-' + data[i]['attribute_id']).append('<li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-float"> <p>' + data[i][j]['attribute_float'] + '</p></li>');
+                                    $('#table-float-' + data[i]['attribute_id']).append('<li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-float"> <p id="table-float-' + data[i][j]['id'] + '">' + data[i][j]['attribute_float'] + '</p></li>');
                                 }
                                 if(data[i][j]['attribute_double'] != null){
-                                    $('#attr-div-' + data[i]['attribute_id']).append('<li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-double"> <p>' + data[i][j]['attribute_double'] + '</p></li>');
+                                    $('#table-double-' + data[i]['attribute_id']).append('<li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-double"><p id="table-double-' + data[i][j]['id'] + '">' + data[i][j]['attribute_double'] + '</p></li>');
                                 }
                                 if(data[i][j]['attribute_bool'] != null){
                                     if(data[i][j]['attribute_bool'] == 1){
-                                        $('#attr-div-' + data[i]['attribute_id']).append('<li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-bool-true"> <i class="fa fa-check-circle" aria-hidden="true"></i></li>');
+                                        $('#table-bool-' + data[i]['attribute_id']).append('<li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-bool-true"> <i class="fa fa-check-circle" aria-hidden="true"></i>  <i title="Изменить значение атрибута" id="e-v-at-' + data[i]['attribute_id'] + '" onclick="editValInputAttr(id, ' + elementID + ', ' + data[i][j]['id'] + ')" data-toggle="modal" data-target=".bd-attr-edit-value-modal-lg" class="fa fa-pencil edit-attr-value" aria-hidden="true"></i><i title="Удалить значение атрибута " id="r-at-' + data[i][j]['id'] + '" onclick="removeInputAttr(id, ' + data[i]['element_id'] + ')" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr" aria-hidden="true"></i></li>');
                                     } else if(data[i][j]['attribute_bool'] == 0){
-                                        $('#attr-div-' + data[i]['attribute_id']).append('<li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-bool-false"> <i class="fa fa-times-circle" aria-hidden="true"></i></li>');
+                                        $('#table-bool-' + data[i]['attribute_id']).append('<i title="Изменить значение атрибута" id="e-v-at-' + data[i]['attribute_id'] + '" onclick="editValInputAttr(id, ' + elementID + ', ' + data[i][j]['id'] + ')" data-toggle="modal" data-target=".bd-attr-edit-value-modal-lg" class="fa fa-pencil edit-attr-value-table" aria-hidden="true"></i><i title="Удалить значение атрибута " id="r-at-' + data[i][j]['id'] + '" onclick="removeInputAttr(id, ' + data[i]['element_id'] + ')" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr-table" aria-hidden="true"></i><li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-bool-false"> <i class="fa fa-times-circle" aria-hidden="true"></i></li>');
                                     }  
                                 }
                                 if(data[i][j]['attribute_IP'] != null){
-                                    $('#attr-div-' + data[i]['attribute_id']).append('<li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-ip"> <p>IP: ' + data[i][j]['attribute_IP'] + '</p></li>');
+                                    $('#table-ip-' + data[i]['attribute_id']).append('<i title="Изменить значение атрибута" id="e-v-at-' + data[i]['attribute_id'] + '" onclick="editValInputAttr(id, ' + elementID + ', ' + data[i][j]['id'] + ')" data-toggle="modal" data-target=".bd-attr-edit-value-modal-lg" class="fa fa-pencil edit-attr-value" aria-hidden="true"></i><i title="Удалить значение атрибута " id="r-at-' + data[i][j]['id'] + '" onclick="removeInputAttr(id, ' + data[i]['element_id'] + ')" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr" aria-hidden="true"></i><li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-ip"> <p id="table-ip-' + data[i][j]['id'] + '">IP: ' + data[i][j]['attribute_IP'] + '</p></li>');
+                                }
+                                if(data[i][j]['id'] != null){
+
+                                    if(data[i][j]['attribute_double'] != null){
+                                        $('#table-double-' + data[i][j]['id']).append('<i title="Изменить значение атрибута" id="e-v-at-' + data[i]['attribute_id'] + '" onclick="editValInputAttr(id, ' + elementID + ', ' + data[i][j]['id'] + ')" data-toggle="modal" data-target=".bd-attr-edit-value-modal-lg" class="fa fa-pencil edit-attr-value-table" aria-hidden="true"></i><i title="Удалить значение атрибута " id="r-at-' + data[i][j]['id'] + '" onclick="removeInputAttr(id, ' + data[i]['element_id'] + ')" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr-table" aria-hidden="true"></i>');
+                                    }
+                                    if(data[i][j]['attribute_float'] != null){
+                                        $('#table-float-' + data[i][j]['id']).append('<i title="Изменить значение атрибута" id="e-v-at-' + data[i]['attribute_id'] + '" onclick="editValInputAttr(id, ' + elementID + ', ' + data[i][j]['id'] + ')" data-toggle="modal" data-target=".bd-attr-edit-value-modal-lg" class="fa fa-pencil edit-attr-value-table" aria-hidden="true"></i><i title="Удалить значение атрибута " id="r-at-' + data[i][j]['id'] + '" onclick="removeInputAttr(id, ' + data[i]['element_id'] + ')" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr-table" aria-hidden="true"></i>');
+                                    }
+                                    if(data[i][j]['attribute_int'] != null){
+                                        $('#table-int-' + data[i][j]['id']).append('<i title="Изменить значение атрибута" id="e-v-at-' + data[i]['attribute_id'] + '" onclick="editValInputAttr(id, ' + elementID + ', ' + data[i][j]['id'] + ')" data-toggle="modal" data-target=".bd-attr-edit-value-modal-lg" class="fa fa-pencil edit-attr-value-table" aria-hidden="true"></i><i title="Удалить значение атрибута " id="r-at-' + data[i][j]['id'] + '" onclick="removeInputAttr(id, ' + data[i]['element_id'] + ')" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr-table" aria-hidden="true"></i>');
+                                    }
+                                    if(data[i][j]['attribute_img'] != null){
+                                        $('#table-img-' + data[i][j]['id']).after('<div class="btns-edit-img"><i title="Изменить значение атрибута" id="e-v-at-' + data[i]['attribute_id'] + '" onclick="editValInputAttr(id, ' + elementID + ', ' + data[i][j]['id'] + ')" data-toggle="modal" data-target=".bd-attr-edit-value-modal-lg" class="fa fa-pencil edit-attr-value-table" aria-hidden="true"></i><i title="Удалить значение атрибута " id="r-at-' + data[i][j]['id'] + '" onclick="removeInputAttr(id, ' + data[i]['element_id'] + ')" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr-table" aria-hidden="true"></i></div>');
+                                    }
+                                    //console.log(data[i][j]['id']);
+                                    
                                 }
                             } else if(data[i][j] == null){
                                 break;
