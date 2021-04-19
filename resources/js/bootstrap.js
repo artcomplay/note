@@ -44,6 +44,24 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 
 
+    let val = "Прог";
+
+    $.ajax({
+      url: "admin/search_element",
+      type: 'GET',
+      data: {
+        value_text: val,
+      },
+      headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      success: (data) => {
+        console.log('se_el_ok')
+      }
+    })
+
+
+
 
   import Chart from 'chart.js/auto';
 

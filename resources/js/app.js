@@ -32,7 +32,7 @@ Vue.component('create-note-component', require('./components/CreateNoteComponent
 Vue.component('create-section-component', require('./components/CreateSectionComponent.vue').default);
 Vue.component('functions-component', require('./components/FunctionsComponent.vue').default);
 
-Vue.component('chart-component', require('./components/ChartComponent.vue').default);
+
 
 
 /**

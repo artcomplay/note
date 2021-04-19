@@ -2451,7 +2451,6 @@ Vue.component('edit-element-component', __webpack_require__(/*! ./components/Edi
 Vue.component('create-note-component', __webpack_require__(/*! ./components/CreateNoteComponent.vue */ "./resources/js/components/CreateNoteComponent.vue").default);
 Vue.component('create-section-component', __webpack_require__(/*! ./components/CreateSectionComponent.vue */ "./resources/js/components/CreateSectionComponent.vue").default);
 Vue.component('functions-component', __webpack_require__(/*! ./components/FunctionsComponent.vue */ "./resources/js/components/FunctionsComponent.vue").default);
-Vue.component('chart-component', Object(function webpackMissingModule() { var e = new Error("Cannot find module './components/ChartComponent.vue'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()).default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -2545,6 +2544,20 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     forceTLS: true
 // });
 
+var val = "Прог";
+$.ajax({
+  url: "admin/search_element",
+  type: 'GET',
+  data: {
+    value_text: val
+  },
+  headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  },
+  success: function success(data) {
+    console.log('se_el_ok');
+  }
+});
 
 var ctx = document.getElementById('myChart');
 var myChart = new chart_js_auto__WEBPACK_IMPORTED_MODULE_0__.default(ctx, {
