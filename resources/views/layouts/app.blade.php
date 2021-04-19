@@ -93,6 +93,7 @@
 </body>
     
     @yield('custom_js')
+    @yield('chart')
     <script src="{{ asset('js/app.js') }}" defer></script>
 
 </html>

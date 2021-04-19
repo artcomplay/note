@@ -7,6 +7,14 @@
 
             <div class="row">
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+
+                    <div>
+                        <canvas id="myChart"></canvas>
+                    </div>
+
+                
+
+
                     <nav class="dash-vertical-menu">
                     <i class="fa fa-search search-input-i" aria-hidden="true"></i><input id="search-element" class="search-input form-control" placeholder="Поиск по сайту" type="text" name="search">
                     <div><ul class="result-search"></ul></div>
@@ -288,6 +296,7 @@
 
 @section('custom_js')
  <script>
+
 
     function showResultSearch(event, complexID){
         complexID = complexID.split('-');

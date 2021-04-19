@@ -8,6 +8,7 @@ require('./bootstrap');
 
 window.Vue = require('vue').default;
 
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -31,6 +32,8 @@ Vue.component('create-note-component', require('./components/CreateNoteComponent
 Vue.component('create-section-component', require('./components/CreateSectionComponent.vue').default);
 Vue.component('functions-component', require('./components/FunctionsComponent.vue').default);
 
+Vue.component('chart-component', require('./components/ChartComponent.vue').default);
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -45,7 +48,7 @@ Vue.component('functions-component', require('./components/FunctionsComponent.vu
     }
 });*/
 
-var elements = ['#create-attribute', '#create-value-attribute', '#edit-value-attribute','#input-edit-value-attribute','#input-edit-attribute','#img-modal','#edit-element','#create-note','#create-section', '#functions'];
+var elements = ['#create-attribute', '#create-value-attribute', '#edit-value-attribute','#input-edit-value-attribute','#input-edit-attribute','#img-modal','#edit-element','#create-note','#create-section', '#functions', '#chart'];
 
 for(i = 0; i <= elements.length; i++){
     
@@ -71,11 +74,8 @@ $('#search-element').keyup(function(){
       if(data.length != null){
         for(let i = 0; i < data.length; i++){
           $('.result-search').empty();
-          // let complex = data[i].complex_id;
-          // complex = complex.split('-')
           let sp = "'";
-          $('.result-search').append('<li><i class="fa fa-hand-o-right hand-right" aria-hidden="true"></i><a onclick="showResultSearch(event, ' + sp + data[i].complex_id + sp + ')">' + data[i].element_name + '</a></li>')
-          //console.log(data.length);
+          $('.result-search').append('<li><i class="fa fa-hand-o-right hand-right" aria-hidden="true"></i><a onclick="showResultSearch(event, ' + sp + data[i].complex_id + sp + ')">' + data[i].element_name + '</a></li>');
         }
       }
     }
