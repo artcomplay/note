@@ -1,15 +1,22 @@
 *{
-  font-family: Oswald, sans-serif;
+  /* font-family: Oswald, sans-serif; */
   color: #3c3c3c;
+  font-family: source-code-pro, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono ,Courier New, monospace;
+  font-weight: 600;
+  font-size: 12px;
 }
 
 a{
-  color: #3490dce6 !important;
+  color: #2f8492d1 !important;
   cursor: pointer;
 }
 
 i{
   cursor: pointer; 
+}
+
+ul{
+  padding-inline-start: 20px;
 }
 
 li{
@@ -49,19 +56,7 @@ li{
     margin: 0px;
     line-height: 35px;
     cursor: pointer;
-    /*    
-      .collapsed{
-         .arrow:before{
-                   font-family: FontAwesome;
-                   content: "\f053";
-                   display: inline-block;
-                   padding-left:10px;
-                   padding-right: 10px;
-                   vertical-align: middle;
-                   float:right;
-              }
-       }
-  */
+
   }
   .nav-side-menu ul :not(collapsed) .arrow:before,
   .nav-side-menu li :not(collapsed) .arrow:before {
@@ -173,6 +168,7 @@ li{
   .dash-vertical-menu li{
     list-style: none;
     font-family: Oswald, sans-serif;
+    font-size: 12px;
   }
 
 
@@ -433,16 +429,16 @@ li{
 }
 
 .attribute-title p{
-  color: #2e86a0eb;
-  margin-bottom: 5px;
+  color: #2b65ada8;
+  margin-bottom: 2px;
 }
 
 .attribute-description p{
-  color: #652f10c7;
-  background: #efefef;
-  padding: 5px 5px 5px 15px;
+  color: #652f10a6;
+  background: #efefefd6;
+  padding: 2px 2px 2px 10px;
   border-radius: 3px;
-  margin: 0px 50px 7px 7px;
+  margin: 0px 50px 2px 3px;
 }
 
 .attribute-img img{
@@ -487,7 +483,7 @@ li{
 }
 
 .attribute-double p{
-  color: #ab8d8dc2;
+  color: #484848e6;
 }
 
 .attribute-bool p{
@@ -504,7 +500,7 @@ li{
 
 .attr-container{
   border: 1px solid #afafaf2b;
-  padding: 7px 12px 7px 12px;
+  padding: 5px 7px 5px 9px;
   border-radius: 5px;
   margin-top: 5px;
   box-shadow: 1px 1px 2px #b8b8b838;
@@ -543,4 +539,23 @@ li{
   color: #3f8dd052 !important;
   right: 75px;
   cursor: pointer;
+}
+
+.script-attr{
+  color: #c4118d6b !important;
+  position: absolute;
+  right: 100px;
+  cursor: pointer;
+}
+
+.search-input-i{
+  position: relative;
+  display: inline-block !important;
+  color: #2f8492d1;
+}
+
+.search-input{
+  position: relative;
+  display: inline-block !important;
+  width: 95% !important;
 }

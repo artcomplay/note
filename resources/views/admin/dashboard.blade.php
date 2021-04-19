@@ -1,12 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
+
     <div class="container">
         <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
 
             <div class="row">
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                     <nav class="dash-vertical-menu">
+                    <i class="fa fa-search search-input-i" aria-hidden="true"></i><input id="search-element" class="search-input form-control" placeholder="Поиск по сайту" type="text" name="search">
                         <ul class="elements">
                             @foreach($elements as $element)
                                 <li id="el-id-{{ $element->id }}">
@@ -283,9 +285,9 @@
 @endsection
 
 @section('custom_js')
-<script>
+ <script>
 
-
+                                                     
     function removeInputAttr(attrID, elementID){
         let mainAttr = attrID.replace('r-at-main-', '');
         let valAttr = attrID.replace('r-at-', '');
@@ -314,32 +316,27 @@
             }
         })
     }
-
     function createInputAttr(attrID, elementID){
         $('.create-val-attr-element').attr('id', 'crt-attr-' + elementID);
         $('.attr-id').attr('value', attrID);
     }
-
     function editInputAttr(attrID, elementID){
         let newAttrID = attrID.replace('e-at-', '');
         $('.edit-attr-btn').attr('id', 'edit-attr-' + newAttrID);
         $('.input-edit-attr').attr('id', 'el-ed-art-' + elementID);
     }
-
     function editValInputAttr(attrID, elementID, id){
         let valAttrID = attrID.replace('e-v-at-', '');
         $('.attr-id').attr('value', id);
         $('.edit-val-attr-element').attr('id', 'e-val-at-' + valAttrID);
         $('.input-edit-value-attr').attr('id', 'el-val-ed-at-' + elementID);
     }
-
     function editAttr(event, attrID){
         event.preventDefault();
         attrID = attrID.replace('edit-attr-', '');
         let arEdit = $('.input-edit-attr').children('input.form-control');
         let arEditEl = $('.input-edit-attr').attr('id');
         let elementID = arEditEl.replace('el-ed-art-', '');
-
         $.ajax({
             url: "{{ route('admin.edit_attr') }}",
             type: 'POST',
@@ -358,7 +355,6 @@
             }
         })
     }
-
     function editValueAttr(event, attrID){
         event.preventDefault();
         attrID = attrID.replace('e-val-at-', '');   
@@ -372,13 +368,11 @@
                 inputArray[arEdit[i].name] = val;
             } else if(arEdit[i].name != null && arEdit[i].type != 'submit' && arEdit[i].type != 'radio'){ 
                 inputArray[arEdit[i].name] = arEdit[i].value;
-
             } else if(arEdit[i].type == 'radio' && arEdit[i].checked == true){
                 inputArray[arEdit[i].name] = arEdit[i].value;
             }
         }
         let childText = $('.input-edit-value-attr').children('textarea').val();
-
         $.ajax({
             url: "{{ route('admin.edit_value_attr') }}",
             type: 'POST',
@@ -405,7 +399,6 @@
             }
         })
     }
-
     function getComplexID(event, elementID){
         event.preventDefault();
         $.ajax({
@@ -426,7 +419,6 @@
             }
         })
     }
-
     function createAttr(event, elementID){
         let child = $('.input-create-attr-element').children('input');
         let inputArray = new Array();
@@ -436,13 +428,11 @@
                 inputArray[child[i].name] = val;
             } else if(child[i].name != null && child[i].type != 'submit' && child[i].type != 'radio'){ 
                 inputArray[child[i].name] = child[i].value;
-
             } else if(child[i].type == 'radio' && child[i].checked == true){
                 inputArray[child[i].name] = child[i].value;
             }
         }
         let childText = $('.input-create-attr-element').children('textarea').val();
-
         $.ajax({
             url: "{{ route('admin.create_attr') }}",
             type: 'POST',
@@ -470,7 +460,6 @@
             }
         })
     }
-
     function createAttributeValue(event, elID){
         console.log();
         event.preventDefault();
@@ -484,14 +473,12 @@
                 inputArray[arEdit[i].name] = val;
             } else if(arEdit[i].name != null && arEdit[i].type != 'submit' && arEdit[i].type != 'radio'){ 
                 inputArray[arEdit[i].name] = arEdit[i].value;
-
             } else if(arEdit[i].type == 'radio' && arEdit[i].checked == true){
                 inputArray[arEdit[i].name] = arEdit[i].value;
             }
         }
         let childText = $('.input-create-value-attr').children('textarea').val();
         let attrID = inputArray['attrubute-id'].replace('crt-attr-', '');
-
         $.ajax({
             url: "{{ route('admin.create_attr_value') }}",
             type: 'POST',
@@ -517,12 +504,10 @@
             }
         })
     }
-
     function appendBigImg(el){
         let img = $(el).children('img');
         $('.big-img-attr').empty().append('<img class="big-img" src="' + img[0].currentSrc + '" />');
     }
-
     function attributeData(event, elementID){
         $.ajax({
             url: "{{ route('admin.get_attr') }}",
@@ -548,7 +533,6 @@
                             /* attribute_id = data[i][j]['attribute_id'] */
                             /* created_at = data[i][j]['created_at'] */
                             /* updated_at = data[i][j]['updated_at'] */
-
                         for(let j = 0; j < data[i]['count_attr']; j++){
                             if(data[i][j] != null){
                                 if(data[i][j]['id'] != null){
@@ -558,15 +542,12 @@
                                 if(data[i][j]['element_id'] != null){
                                     //console.log(data[i][j]['element_id']);
                                 }
-
                                 if(data[i][j]['attribute_img'] != null){
                                     $('#attr-div-' + data[i]['attribute_id']).append('<li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-img" onclick="appendBigImg(this);">  <img data-toggle="modal" data-target=".bd-img-modal-lg" src="' + data[i][j]['attribute_img'] + '" /></li>');
                                 }
-
                                 if(data[i][j]['attribute_text'] != null){
                                     $('#attr-div-' + data[i]['attribute_id']).append('<li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-text"> <p>' + data[i][j]['attribute_text'] + '</p></li>');
                                 }
-
                                 if(data[i][j]['attribute_varchar'] != null){
                                     $('#attr-div-' + data[i]['attribute_id']).append('<li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-href"> <a href="' + data[i][j]['attribute_varchar'] + '">' + data[i]['attribute_name'] + '</a> <i class="fa fa-chevron-circle-right ch-href" aria-hidden="true"></i> </li>');
                                 }
@@ -595,7 +576,6 @@
                                 if(data[i][j]['attribute_IP'] != null){
                                     $('#attr-div-' + data[i]['attribute_id']).append('<li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-ip"> <p>IP: ' + data[i][j]['attribute_IP'] + '</p></li>');
                                 }
-
                             } else if(data[i][j] == null){
                                 break;
                             }
@@ -607,7 +587,6 @@
             }
         }) 
     }
-
     function editElement(event, elementID){
         event.preventDefault();
         elementID = Number(elementID);
@@ -633,7 +612,6 @@
             }
         })
     }
-
     function showAllElements(event, elementID){
         event.preventDefault();
         elementID = Number(elementID);
@@ -670,7 +648,6 @@
             }
         })
     }
-
     function showElements(event, elementID){
         event.preventDefault();
         elementID = Number(elementID);
@@ -688,8 +665,6 @@
             }
         })
     }
-
-
     function getRemoveElements(event, elementID){
         event.preventDefault();
         elementID = Number(elementID);
@@ -731,11 +706,9 @@
         })
         
     }
-
     function removeElement(event, elementID){
         event.preventDefault();
         elementID = Number(elementID);
-
         $.ajax({
             url: "{{ route('admin.remove_element') }}",
             type: 'POST',
@@ -750,7 +723,6 @@
             }
         }) 
     }
-
     function createNote(event, complexID){
         event.preventDefault();
         let elementNameValue;
@@ -783,7 +755,6 @@
             }
         })
     }
-
     function elementData(event, parentID){
         parentID = Number(parentID);
         event.preventDefault();
@@ -812,20 +783,16 @@
             }
         })
     }
-
     function inputID(complexID){
         $('.create-child').attr('id', complexID);
     }
-
     function inputEditID(elementID){
         $('.edit-element').attr('id', elementID);
     }
-
     function inputAttrID(elementID){
         $('.attr-element').attr('id', elementID);
         $('.attr-id').attr('value', elementID)
     }
-
     function encodeImageEdit(element) {
         var file = element.files[0];
         var reader = new FileReader();
@@ -834,7 +801,6 @@
         }
         reader.readAsDataURL(file);
     }
-
     function encodeImage(element) {
         var file = element.files[0];
         var reader = new FileReader();
@@ -843,7 +809,6 @@
         }
         reader.readAsDataURL(file);
     }
-
 </script>
 
 @endsection

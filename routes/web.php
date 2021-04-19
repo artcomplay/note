@@ -40,6 +40,9 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['aut
     Route::post('/edit_value_attr', [App\Http\Controllers\Admin\DashboardController::class, 'edit_value_attr'])->name('admin.edit_value_attr');
     Route::post('/remove_attr', [App\Http\Controllers\Admin\DashboardController::class, 'remove_attr'])->name('admin.remove_attr');
     Route::post('/create_attr_value', [App\Http\Controllers\Admin\DashboardController::class, 'create_attr_value'])->name('admin.create_attr_value');
+    Route::get('/search_element', [App\Http\Controllers\Admin\DashboardController::class, 'search_element'])->name('admin.search_element');
+
+    
        
 });
 

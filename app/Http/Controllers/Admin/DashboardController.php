@@ -279,6 +279,19 @@ class DashboardController extends Controller
     }
 
 
+    public function search_element(Request $request){
+        if($request->ajax()){
+            if (Auth::user()){
+                $user_id = Auth::user()->id;
+                $elements = DB::table('elements')->where([
+                    ['element_name', 'LIKE', $request->value_text.'%' ],
+                    ['user_id', '=', $user_id],
+                ])->get();
+
+                return $elements;
+            }
+        }
+    }
 
 
 

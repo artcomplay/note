@@ -91,6 +91,7 @@
         </main>
     </div>
 </body>
+    
     @yield('custom_js')
     <script src="{{ asset('js/app.js') }}" defer></script>
 
