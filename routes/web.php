@@ -41,7 +41,11 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['aut
     Route::post('/remove_attr', [App\Http\Controllers\Admin\DashboardController::class, 'remove_attr'])->name('admin.remove_attr');
     Route::post('/create_attr_value', [App\Http\Controllers\Admin\DashboardController::class, 'create_attr_value'])->name('admin.create_attr_value');
     Route::get('/search_element', [App\Http\Controllers\Admin\DashboardController::class, 'search_element'])->name('admin.search_element');
+    Route::get('/search_attributes_int', [App\Http\Controllers\Admin\DashboardController::class, 'search_attributes_int'])->name('admin.search_attributes_int');
+    Route::get('/search_attributes_float', [App\Http\Controllers\Admin\DashboardController::class, 'search_attributes_float'])->name('admin.search_attributes_float');
+    Route::get('/search_attributes_double', [App\Http\Controllers\Admin\DashboardController::class, 'search_attributes_double'])->name('admin.search_attributes_double');
 
+    
     
        
 });

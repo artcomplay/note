@@ -41,51 +41,56 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     forceTLS: true
 // });
 
+    
+    function getAttributesForChart(type){
+      let route = "admin/search_attributes_" + type;
+      $.ajax({
+        url: route,
+        type: 'GET',
+        data: {},
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        success: (data) => {
+          let arr = new Array();
+            if(data.length != null){
+              let count = 0;
+              for(let i = 0; i < data.length; i++){
+                for(let j = 0; j < data[i].length; j++){
+                  arr[count] = data[i][j].attribute_double;
+                  count++;
+                }
+              }
+              //console.log(arr);
+              showChart(arr);
+            }
+        }
+      })
+    }
 
+    
+    //getAttributesForChart('double');
 
-
-    let val = "Прог";
-
-    $.ajax({
-      url: "admin/search_element",
-      type: 'GET',
-      data: {
-        value_text: val,
-      },
-      headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      success: (data) => {
-        console.log('se_el_ok')
-      }
-    })
-
-
-
+  
 
   import Chart from 'chart.js/auto';
 
+    function showChart(attrDouble){
+      var ctx = document.getElementById('myChart');
+      var myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: attrDouble,
+            datasets: [
+              {
+                label: 'Double',
+                data: attrDouble,
+                borderColor: 'rgba(210, 85, 66, 1)',
+                backgroundColor: 'rgba(66, 162, 235, 0.2)',
+              }
+            ]
+  
+          },
+          options: {}
+      });
+    }
 
-
-  var ctx = document.getElementById('myChart');
-  var myChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-          labels: [
-            'January',
-            'February',
-            'March',
-            'April',
-            'May',
-            'June',
-        ],
-        datasets: [{
-            label: 'My First dataset',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [0, 10, 5, 2, 20, 30, 45],
-        }]
-      },
-      options: {}
-  });
 

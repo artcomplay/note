@@ -294,7 +294,64 @@ class DashboardController extends Controller
     }
 
 
+    public function search_attributes_int(Request $request){
+        if($request->ajax()){
+            if (Auth::user()){
+                $user_id = Auth::user()->id;
+                $attributes_int = DB::table('attributes_value')->where([
+                    ['attribute_int', '!=', null ],
+                    ['user_id', '=', $user_id],
+                ])->get();
 
+                return $attributes_int;
+            }
+        }
+    }
+
+    public function search_attributes_float(Request $request){
+        if($request->ajax()){
+            if (Auth::user()){
+                $user_id = Auth::user()->id;
+                $attributes_float = DB::table('attributes_value')->where([
+                    ['attribute_float', '!=', null ],
+                    ['user_id', '=', $user_id],
+                ])->get();
+
+                return $attributes_float;
+            }
+        }
+    }
+
+    public function search_attributes_double(Request $request){
+        if($request->ajax()){
+            if (Auth::user()){
+                $user_id = Auth::user()->id;
+                $attributes_double = DB::table('attributes_value')->where([
+                    ['attribute_double', '!=', null ],
+                    ['user_id', '=', $user_id],
+                ])->get();
+
+                $count = 0;
+                foreach($attributes_double as $attr){
+                    $array[$count] = $attr->attribute_id;
+                    $count += 1;
+                }
+
+                $array = array_unique($array, SORT_REGULAR);
+
+                $count = 0;
+                foreach($array as $arr){
+                    $attributes[$count] = DB::table('attributes_value')->where([
+                        ['attribute_id', '=', $arr ],
+                        ['user_id', '=', $user_id],
+                    ])->get();
+                    $count += 1;
+                }
+
+                return $attributes;
+            }
+        }
+    }
 
 
 

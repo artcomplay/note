@@ -8,11 +8,9 @@
             <div class="row">
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
 
-                    <div>
+                    <!-- <div>
                         <canvas id="myChart"></canvas>
-                    </div>
-
-                
+                    </div> -->
 
 
                     <nav class="dash-vertical-menu">
@@ -24,7 +22,7 @@
                                     <a class="section-href" href="" onclick="elementData(event, '{{ $element->id }}')">
                                         {{ $element->element_name }}
                                     </a>
-                                    <i title="Показать все" onclick="showAllElements(event, '{{ $element->id }}')" class="fa fa-bars show-all" aria-hidden="true"></i>
+                                    <!-- <i title="Показать все" onclick="showAllElements(event, '{{ $element->id }}')" class="fa fa-bars show-all" aria-hidden="true"></i> -->
                                     <i title="Удалить раздел {{ $element->element_name }}"                        onclick="getRemoveElements(event, '{{ $element->id }}')"  class="fa fa-times remove-element"         aria-hidden="true"  ></i>
                                     <i title="Редактировать раздел {{ $element->element_name }}"                  onclick="inputEditID('{{ $element->id }}')" class="fa fa-pencil-square-o edit-element" aria-hidden="true" data-toggle="modal" data-target=".bd-edit-modal-lg"></i>
                                     <i title="Создать дочерний элемент для раздела {{ $element->element_name }}"  onclick="inputID('{{ $element->complex_id }}')"     class="fa fa-sun-o new-element"            aria-hidden="true" data-toggle="modal" data-target=".bd-child-modal-lg"></i>
@@ -301,8 +299,10 @@
     function showResultSearch(event, complexID){
         complexID = complexID.split('-');
         for(let i = 0; i < complexID.length; i++){
-            elementData(event, complexID[i]);
+            elementDataSearch(event, complexID[i]);
         }
+
+
     }
                                                      
     function removeInputAttr(attrID, elementID){
@@ -430,7 +430,7 @@
             success: (data) => {
                 if(data.length != 0){
                     for(let i = 0; i < data.length; i++){
-                        elementData(event, data[i]);
+                        elementDataSearch(event, data[i]);
                     }
                 }
             }
@@ -648,7 +648,7 @@
                     location.reload();
                 } else {
                     elementID = idParent.replace('element-id-', '');
-                    elementData(event, elementID);
+                    elementDataSearch(event, elementID);
                 } 
             }
         })
@@ -658,7 +658,7 @@
         elementID = Number(elementID);
         let childUl = $('#element-id-' + elementID).children().length;
         if(childUl == 0){
-            elementData(event, elementID);
+            elementDataSearch(event, elementID);
         }
         $.ajax({
             url: "{{ route('admin.get_remove_elements') }}",
@@ -741,7 +741,7 @@
                     location.reload();
                 } else {
                     elementID = idParent.replace('element-id-', '');
-                    elementData(event, elementID);
+                    elementDataSearch(event, elementID);
                 }
             }
         })
@@ -791,14 +791,63 @@
                 if(parentID == null){
                     location.reload();
                 } else {
-                    elementData(event, parentID);
+                    elementDataSearch(event, parentID);
                 } 
             }
         })
     }
+
+
     function elementData(event, parentID){
-        parentID = Number(parentID);
         event.preventDefault();
+        let elFind = $('#el-id-' + parentID).children('.elements').children('li');
+        let elstyle = $('#el-id-' + parentID).children('.elements').children('li').css('display');
+        let attrFind = $('#el-id-' + parentID).children('.attributes').children('.attr-container');
+        let attrstyle = $('#el-id-' + parentID).children('.attributes').children('.attr-container').css('display');
+        if(elFind.length == 0){
+            attributeData(event, parentID);
+            parentID = Number(parentID);
+            $.ajax({
+                url: "{{ route('admin.element_data') }}",
+                type: 'GET',
+                data: {
+                    parent_id: parentID
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: (data) => {
+                    if(data.length != 0){
+                        $('#element-id-' + parentID).empty();
+                        for(let i = 0; i < data.length; i++){
+                            let children = $('#element-id-' + parentID).children();
+                            let del = "'";
+                            $('#element-id-' + parentID).append('<li id="el-id-' + data[i].id + '"><a onclick="elementData(event, ' + data[i].id + ')">' + data[i].element_name + '</a> <i title="Удалить элемент ' + data[i].element_name + '" onclick="getRemoveElements(event, ' + data[i].id + ')"  class="fa fa-times remove-element" aria-hidden="true"  ></i> <i title="Редактировать раздел ' + data[i].element_name + '" onclick="inputEditID(' + data[i].id + ')" class="fa fa-pencil-square-o edit-element" aria-hidden="true" data-toggle="modal" data-target=".bd-edit-modal-lg"></i> <i title="Создать дочерний элемент для ' + data[i].element_name + '"  onclick="inputID(' + del + data[i].complex_id + del + ')" class="fa fa-sun-o new-element" aria-hidden="true" data-toggle="modal" data-target=".bd-child-modal-lg"></i> <i data-toggle="modal" data-target=".bd-attr-modal-lg" class="fa fa-puzzle-piece new-attribute" aria-hidden="true" onclick="inputAttrID(' + data[i].id + ')" title="Создать атрибут"></i> <ul class="attributes" id="attr-el-' + data[i].id + '"></ul> <ul class="elements" id="element-id-' + data[i].id + '"></ul></li>');
+                            //attributeData(event, data[i].id);
+                        }
+                    } else {
+                        $('#element-id-' + parentID).empty();
+                        $('#element-id-' + parentID).append('<li><a class="empty-element">Не имеется элементов</a></li>')
+                    }
+                }
+            })
+        } else if(elFind.length != 0 && elstyle == 'list-item'){
+            $('#el-id-' + parentID).children('.elements').children('li').hide();
+            if(attrFind.length != 0 && attrstyle == 'block'){
+                $('#el-id-' + parentID).children('.attributes').children('.attr-container').hide();
+            }
+        } else if(elFind.length != 0 && elstyle == 'none'){
+            $('#el-id-' + parentID).children('.elements').children('li').show();
+            if(attrFind.length != 0 && attrstyle == 'none'){
+                $('#el-id-' + parentID).children('.attributes').children('.attr-container').show();
+            }
+        }
+    }
+
+    function elementDataSearch(event, parentID){
+        event.preventDefault();
+        attributeData(event, parentID);
+        parentID = Number(parentID);
         $.ajax({
             url: "{{ route('admin.element_data') }}",
             type: 'GET',
@@ -814,16 +863,18 @@
                     for(let i = 0; i < data.length; i++){
                         let children = $('#element-id-' + parentID).children();
                         let del = "'";
-                        $('#element-id-' + parentID).append('<li id="el-id-' + data[i].id + '"><a onclick="elementData(event, ' + data[i].id + ')">' + data[i].element_name + '</a> <i title="Показать все" onclick="showAllElements(event, ' + data[i].id + ')" class="fa fa-bars show-all" aria-hidden="true"></i> <i title="Удалить элемент ' + data[i].element_name + '" onclick="getRemoveElements(event, ' + data[i].id + ')"  class="fa fa-times remove-element" aria-hidden="true"  ></i> <i title="Редактировать раздел ' + data[i].element_name + '" onclick="inputEditID(' + data[i].id + ')" class="fa fa-pencil-square-o edit-element" aria-hidden="true" data-toggle="modal" data-target=".bd-edit-modal-lg"></i> <i title="Создать дочерний элемент для ' + data[i].element_name + '"  onclick="inputID(' + del + data[i].complex_id + del + ')" class="fa fa-sun-o new-element" aria-hidden="true" data-toggle="modal" data-target=".bd-child-modal-lg"></i> <i data-toggle="modal" data-target=".bd-attr-modal-lg" class="fa fa-puzzle-piece new-attribute" aria-hidden="true" onclick="inputAttrID(' + data[i].id + ')" title="Создать атрибут"></i> <ul class="attributes" id="attr-el-' + data[i].id + '"></ul> <ul class="elements" id="element-id-' + data[i].id + '"></ul></li>');
-                        attributeData(event, data[i].id);
+                        $('#element-id-' + parentID).append('<li id="el-id-' + data[i].id + '"><a onclick="elementData(event, ' + data[i].id + ')">' + data[i].element_name + '</a> <i title="Удалить элемент ' + data[i].element_name + '" onclick="getRemoveElements(event, ' + data[i].id + ')"  class="fa fa-times remove-element" aria-hidden="true"  ></i> <i title="Редактировать раздел ' + data[i].element_name + '" onclick="inputEditID(' + data[i].id + ')" class="fa fa-pencil-square-o edit-element" aria-hidden="true" data-toggle="modal" data-target=".bd-edit-modal-lg"></i> <i title="Создать дочерний элемент для ' + data[i].element_name + '"  onclick="inputID(' + del + data[i].complex_id + del + ')" class="fa fa-sun-o new-element" aria-hidden="true" data-toggle="modal" data-target=".bd-child-modal-lg"></i> <i data-toggle="modal" data-target=".bd-attr-modal-lg" class="fa fa-puzzle-piece new-attribute" aria-hidden="true" onclick="inputAttrID(' + data[i].id + ')" title="Создать атрибут"></i> <ul class="attributes" id="attr-el-' + data[i].id + '"></ul> <ul class="elements" id="element-id-' + data[i].id + '"></ul></li>');
+                        //attributeData(event, data[i].id);
                     }
                 } else {
                     $('#element-id-' + parentID).empty();
-                    $('#element-id-' + parentID).append('<li><a class="empty-element">Не имеется элементов</a></li>')
+                    $('#element-id-' + parentID).append('<li><a class="empty-element">Не имеется элементов</a></li>');
                 }
             }
         })
     }
+
+
     function inputID(complexID){
         $('.create-child').attr('id', complexID);
     }

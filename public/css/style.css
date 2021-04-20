@@ -11,6 +11,11 @@ a{
   cursor: pointer;
 }
 
+canvas{
+  border-left: 1px solid #cccccc;
+  border-bottom: 1px solid #cccccc;
+}
+
 i{
   cursor: pointer; 
 }
@@ -606,4 +611,10 @@ li{
   margin: auto;
   margin-left: 7px;
   margin-right: 7px;
+}
+
+.selected-item-search{
+  background: #ff00003b;
+  padding: 5px 8px 5px 10px;
+  border-radius: 3px;
 }
