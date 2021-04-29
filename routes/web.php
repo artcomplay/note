@@ -44,10 +44,10 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['aut
     Route::get('/search_attributes_int', [App\Http\Controllers\Admin\DashboardController::class, 'search_attributes_int'])->name('admin.search_attributes_int');
     Route::get('/search_attributes_float', [App\Http\Controllers\Admin\DashboardController::class, 'search_attributes_float'])->name('admin.search_attributes_float');
     Route::get('/search_attributes_double', [App\Http\Controllers\Admin\DashboardController::class, 'search_attributes_double'])->name('admin.search_attributes_double');
-
-    
-    
-       
+    Route::get('/get_all_attr', [App\Http\Controllers\Admin\DashboardController::class, 'get_all_attr'])->name('admin.get_all_attr');
+    Route::get('/get_attr_val', [App\Http\Controllers\Admin\DashboardController::class, 'get_attr_val'])->name('admin.get_attr_val');
+     
+      
 });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

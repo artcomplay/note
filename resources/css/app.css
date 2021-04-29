@@ -618,3 +618,34 @@ li{
   padding: 5px 8px 5px 10px;
   border-radius: 3px;
 }
+
+.all-attribute{
+  color: #2f8492d1 !important;
+  margin-right: 10px;
+}
+
+.create-section-icon{
+  color: #2f8492d1 !important;
+  margin-right: 10px;
+}
+
+.table-attr th{
+  border: 1px solid #2f8492d1;
+  padding: 5px;
+  color: #986260eb;
+  cursor: pointer;
+}
+
+.table-attr td{
+  border: 1px solid #2f8492d1;
+  padding: 5px;
+  color: #2f8492d1;
+  cursor: pointer;
+}
+
+.table-attr-img img{
+  width: 40px;
+  display: block;
+  margin: auto;
+}
+

@@ -30,9 +30,17 @@
                                 </li>
                             @endforeach
 
-                            <li><a data-toggle="modal" data-target=".bd-example-modal-lg" >+ Добавить раздел</a></li>
+                            <li><i class="fa fa-plus-circle create-section-icon" aria-hidden="true"></i><a data-toggle="modal" data-target=".bd-example-modal-lg" >Добавить раздел</a></li>
+                            <li><i class="fa fa-puzzle-piece all-attribute" aria-hidden="true"></i><a onclick="getAllAttributes(event)" >Все атрибуты</a></li>
+                            <table class="table-attr-main">
+                                <tr class="table-attr"><th style="width: 20%;">Название</th><th style="width: 10%;">Описание</th><th style="width: 7%;">Изображение</th><th style="width: 10%;">Целое число</th><th style="width: 10%;">Дробное x.2</th><th style="width: 10%;">Дробное x.15</th><th style="width: 3%;">Истина/Ложь</th><th style="width: 10%;">Дата создания</th><th style="width: 10%;">Дата обновления</th></tr>
+                            </table>
+
                         </ul>
+                        
                     </nav>
+                    
+
                 </div>
 
                 <!--<div class="main-block-section col-9 col-sm-9 col-md-9 col-lg-9 col-xl-9">
@@ -295,14 +303,81 @@
 @section('custom_js')
  <script>
 
+    function getAttrVal(attrID){
+        $.ajax({
+            url: "{{ route('admin.get_attr_val') }}",
+            type: 'GET',
+            data: {
+                attribute_id: attrID,
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: (data) => {
+                if(data.length != 0){
+                    for(let i = 0; i < data.length; i++){
+                        //console.log(data[i].attribute_img);
+                        if(data[i].attribute_img != null){
+                            $('#tabl-attr-id-' + data[i].attribute_id).children('.table-attr-img').append('<img src="' + data[i].attribute_img + '" />');    
+                        }
+                        if(data[i].attribute_int != null){
+                            $('#tabl-attr-id-' + data[i].attribute_id).children('.table-attr-int').children('ul').append('<li>' + data[i].attribute_int + '</li>');    
+                        }
+                        if(data[i].attribute_float != null){
+                            $('#tabl-attr-id-' + data[i].attribute_id).children('.table-attr-d2').children('ul').append('<li>' + data[i].attribute_float + '</li>');    
+                        }
+                        if(data[i].attribute_double != null){
+                            $('#tabl-attr-id-' + data[i].attribute_id).children('.table-attr-d15').children('ul').append('<li>' + data[i].attribute_double + '</li>');    
+                        }
+                        if(data[i].attribute_bool != null){
+                            $('#tabl-attr-id-' + data[i].attribute_id).children('.table-attr-bool').append('<li>' + data[i].attribute_bool + '</li>');    
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    function getAllAttributes(event){
+        event.preventDefault();
+        $.ajax({
+            url: "{{ route('admin.get_all_attr') }}",
+            type: 'GET',
+            data: {},
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: (data) => {
+                
+                if(data.length != 0){
+                    for(let i = 0; i < data.length; i++){
+                        let desc = '';
+                        if(data[i].attribute_description != null){
+                            desc = data[i].attribute_description
+                        } else {
+                            desc = '';
+                        }
+                        $('.table-attr-main').append('<tr id="tabl-attr-id-' + data[i].id + '" class="table-attr"><td><a onclick="getComplexID(event, ' + data[i].element_id + ')">' + data[i].attribute_name + '</a></td> <td>' + desc + '</td> <td class="table-attr-img"></td>  <td class="table-attr-int"><ul></ul></td>  <td class="table-attr-d2"><ul></ul></td>  <td class="table-attr-d15"><ul></ul></td>  <td class="table-attr-bool"></td>  <td>' + data[i].created_at + '</td>  <td>' + data[i].updated_at + '</td> </tr>');
+                        getAttrVal(data[i].id);
+                        //let complexID = getComplexID(event, data[i].element_id);
+                        //console.log(complexID);
+                    }
+                }
+            }
+        })
+    }   
+   
+    function attrTabeShow(event, elementID, element){
+        event.preventDefault();
+        console.log(element);
+    }
+
 
     function showResultSearch(event, complexID){
         complexID = complexID.split('-');
         for(let i = 0; i < complexID.length; i++){
             elementDataSearch(event, complexID[i]);
         }
-
-
     }
                                                      
     function removeInputAttr(attrID, elementID){
