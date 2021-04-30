@@ -25,7 +25,7 @@
                                     <!-- <i title="Показать все" onclick="showAllElements(event, '{{ $element->id }}')" class="fa fa-bars show-all" aria-hidden="true"></i> -->
                                     <i title="Удалить раздел {{ $element->element_name }}"                        onclick="getRemoveElements(event, '{{ $element->id }}')"  class="fa fa-times remove-element"         aria-hidden="true"  ></i>
                                     <i title="Редактировать раздел {{ $element->element_name }}"                  onclick="inputEditID('{{ $element->id }}')" class="fa fa-pencil-square-o edit-element" aria-hidden="true" data-toggle="modal" data-target=".bd-edit-modal-lg"></i>
-                                    <i title="Создать дочерний элемент для раздела {{ $element->element_name }}"  onclick="inputID('{{ $element->complex_id }}')"     class="fa fa-sun-o new-element"            aria-hidden="true" data-toggle="modal" data-target=".bd-child-modal-lg"></i>
+                                    <i title="Создать элемент для раздела {{ $element->element_name }}"  onclick="inputID('{{ $element->complex_id }}')"     class="fa fa-sun-o new-element"            aria-hidden="true" data-toggle="modal" data-target=".bd-child-modal-lg"></i>
                                     <ul class="elements" id="element-id-{{ $element->id }}"></ul>
                                 </li>
                             @endforeach
@@ -63,7 +63,7 @@
                                         </button>
 
                                         <div class="input-create-element">
-                                            <input type="text" class="element-name form-control" name="element-name" placeholder="Название раздела">
+                                            <input type="text" class="element-name form-control clear-input" name="element-name" placeholder="Название раздела">
                                             <input type="submit" class="btn btn-success" data-dismiss="modal" aria-label="Close" onclick="createNote(event, null)" value="Создать раздел">
 
                                         </div>
@@ -85,7 +85,7 @@
                                         </button>
 
                                         <div class="input-create-element">
-                                            <input type="text" class="element-name-complex form-control" name="element-name" placeholder="Название элемента">
+                                            <input type="text" class="element-name-complex form-control clear-input" name="element-name" placeholder="Название элемента">
                                             <input type="submit" class="btn btn-success create-child" data-dismiss="modal" aria-label="Close" onclick="createNote(event, id)" value="Создать элемент">
                                         </div>
                                     </div>
@@ -107,7 +107,7 @@
                                         </button>
 
                                         <div class="input-create-element">
-                                            <input type="text" class="element-edit-name form-control" name="element-name" placeholder="Новое название элемента">
+                                            <input type="text" class="element-edit-name form-control clear-input" name="element-name" placeholder="Новое название элемента">
                                             <input type="submit" class="btn btn-success edit-element" data-dismiss="modal" aria-label="Close" onclick="editElement(event, id)" value="Изменить">
                                         </div>
                                     </div>
@@ -145,8 +145,8 @@
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                         <div class="input-edit-attr">
-                                            <input class="element-attr-name form-control" placeholder="Новое название Атрибута" type="text" name="attribute-name"/>
-                                            <input class="element-attr-name form-control" placeholder="Новое описание" type="text" name="description"/>
+                                            <input class="element-attr-name form-control clear-input" placeholder="Новое название Атрибута" type="text" name="attribute-name"/>
+                                            <input class="element-attr-name form-control clear-input" placeholder="Новое описание" type="text" name="description"/>
                                             <input type="submit" class="btn btn-success edit-attr-btn" data-dismiss="modal" aria-label="Close" onclick="editAttr(event, id)" value="Изменить атрибут">
                                         </div>
                                     </div>
@@ -167,29 +167,30 @@
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                         <div class="input-edit-value-attr">
+
                                             <span class="span-attribute">Значение Атрибута (Целое число)</span>
-                                            <input class="element-attr-name form-control" placeholder="Номинальное значение" type="number" name="number-attribute"/> 
+                                            <input class="element-attr-name form-control clear-input" placeholder="Номинальное значение" type="number" name="number-attribute"/> 
                                             <span class="span-attribute">Значение Атрибута (Дробное число - точность 2 после запятой)</span>
-                                            <input class="element-attr-name form-control" placeholder="Номинальное значение" type="number" name="double-2"/> 
+                                            <input class="element-attr-name form-control clear-input" placeholder="Номинальное значение" type="number" name="double-2"/> 
                                             <span class="span-attribute">Значение Атрибута (Дробное число - точность 15 после запятой)</span>
-                                            <input class="element-attr-name form-control" placeholder="Номинальное значение" type="number" name="double-15"/> 
+                                            <input class="element-attr-name form-control clear-input" placeholder="Номинальное значение" type="number" name="double-15"/> 
                                             <span class="span-attribute">Время начала</span> 
-                                            <input class="element-attr-name form-control" placeholder="Время" type="time" name="time-first"/> 
+                                            <input class="element-attr-name form-control clear-input" placeholder="Время" type="time" name="time-first"/> 
                                             <span class="span-attribute">Время окончания</span> 
-                                            <input class="element-attr-name form-control" placeholder="Время" type="time" name="time-second"/> 
+                                            <input class="element-attr-name form-control clear-input" placeholder="Время" type="time" name="time-second"/> 
                                             <span class="span-attribute">Текст Атрибута</span>
-                                            <textarea class="element-attr-name form-control" placeholder="Текст" type="text" name="attribute-text"></textarea>
+                                            <textarea class="element-attr-name form-control clear-input" placeholder="Текст" type="text" name="attribute-text"></textarea>
                                             <span class="span-attribute">Ссылка на источник</span>
-                                            <input class="element-attr-name form-control" placeholder="https://www.source.com" type="text" name="attribute-varchar"/> 
-                                            <input class="element-attr-name form-control file-input" onchange="encodeImageEdit(this)" type="file" name="attribute-file"/> 
+                                            <input class="element-attr-name form-control clear-input" placeholder="https://www.source.com" type="text" name="attribute-varchar"/> 
+                                            <input class="element-attr-name form-control file-input clear-input" onchange="encodeImageEdit(this)" type="file" name="attribute-file"/> 
                                             <a class="link-edit"></a> 
                                             <span class="span-attribute">Да</span> 
-                                            <input class="element-attr-name form-control input-radio-attribute" type="radio" name="attribute-bool" value="1" /> 
+                                            <input class="element-attr-name form-control input-radio-attribute radio-unchecked" type="radio" name="attribute-bool" value="1" /> 
                                             <span class="span-attribute">Нет</span> 
-                                            <input class="element-attr-name form-control input-radio-attribute" type="radio" name="attribute-bool" value="0"/> 
+                                            <input class="element-attr-name form-control input-radio-attribute radio-unchecked" type="radio" name="attribute-bool" value="0"/> 
                                             <span class="span-attribute">Пусто</span> 
-                                            <input class="element-attr-name form-control input-radio-attribute" type="radio" name="attribute-bool" value="" checked/> 
-                                            <input class="element-attr-name form-control" placeholder="IP адрес" type="text" name="attribute-ip"/>
+                                            <input class="element-attr-name form-control input-radio-attribute radio-checked" type="radio" name="attribute-bool" value="" checked/> 
+                                            <input class="element-attr-name form-control clear-input" placeholder="IP адрес" type="text" name="attribute-ip"/>
                                             <input class="element-attr-name form-control attr-id" type="text" name="attrubute-id"/> 
                                             <input type="submit" class="btn btn-success edit-val-attr-element" data-dismiss="modal" aria-label="Close" onclick="editValueAttr(event, id)" value="Изменить атрибут">
                                         </div>
@@ -212,28 +213,28 @@
                                         </button>
                                         <div class="input-create-value-attr">
                                             <span class="span-attribute">Значение Атрибута (Целое число)</span>
-                                            <input class="element-attr-name form-control" placeholder="Номинальное значение" type="number" name="number-attribute"/> 
+                                            <input class="element-attr-name form-control clear-input" placeholder="Номинальное значение" type="number" name="number-attribute"/> 
                                             <span class="span-attribute">Значение Атрибута (Дробное число - точность 2 после запятой)</span>
-                                            <input class="element-attr-name form-control" placeholder="Номинальное значение" type="number" name="double-2"/> 
+                                            <input class="element-attr-name form-control clear-input" placeholder="Номинальное значение" type="number" name="double-2"/> 
                                             <span class="span-attribute">Значение Атрибута (Дробное число - точность 15 после запятой)</span>
-                                            <input class="element-attr-name form-control" placeholder="Номинальное значение" type="number" name="double-15"/> 
+                                            <input class="element-attr-name form-control clear-input" placeholder="Номинальное значение" type="number" name="double-15"/> 
                                             <span class="span-attribute">Время начала</span> 
-                                            <input class="element-attr-name form-control" placeholder="Время" type="time" name="time-first"/> 
+                                            <input class="element-attr-name form-control clear-input" placeholder="Время" type="time" name="time-first"/> 
                                             <span class="span-attribute">Время окончания</span> 
-                                            <input class="element-attr-name form-control" placeholder="Время" type="time" name="time-second"/> 
+                                            <input class="element-attr-name form-control clear-input" placeholder="Время" type="time" name="time-second"/> 
                                             <span class="span-attribute">Текст Атрибута</span>
-                                            <textarea class="element-attr-name form-control" placeholder="Текст" type="text" name="attribute-text"></textarea>
+                                            <textarea class="element-attr-name form-control clear-input" placeholder="Текст" type="text" name="attribute-text"></textarea>
                                             <span class="span-attribute">Ссылка на источник</span>
-                                            <input class="element-attr-name form-control" placeholder="https://www.source.com" type="text" name="attribute-varchar"/> 
-                                            <input class="element-attr-name form-control file-input" onchange="encodeImage(this)" type="file" name="attribute-file"/> 
+                                            <input class="element-attr-name form-control clear-input" placeholder="https://www.source.com" type="text" name="attribute-varchar"/> 
+                                            <input class="element-attr-name form-control file-input clear-input" onchange="encodeImage(this)" type="file" name="attribute-file"/> 
                                             <a class="link"></a> 
                                             <span class="span-attribute">Да</span> 
-                                            <input class="element-attr-name form-control input-radio-attribute" type="radio" name="attribute-bool" value="1" /> 
+                                            <input class="element-attr-name form-control input-radio-attribute radio-unchecked" type="radio" name="attribute-bool" value="1" /> 
                                             <span class="span-attribute">Нет</span> 
-                                            <input class="element-attr-name form-control input-radio-attribute" type="radio" name="attribute-bool" value="0"/> 
+                                            <input class="element-attr-name form-control input-radio-attribute radio-unchecked" type="radio" name="attribute-bool" value="0"/> 
                                             <span class="span-attribute">Пусто</span> 
-                                            <input class="element-attr-name form-control input-radio-attribute" type="radio" name="attribute-bool" value="" checked/> 
-                                            <input class="element-attr-name form-control" placeholder="IP адрес" type="text" name="attribute-ip"/>
+                                            <input class="element-attr-name form-control input-radio-attribute radio-checked" type="radio" name="attribute-bool" value="" checked/> 
+                                            <input class="element-attr-name form-control clear-input" placeholder="IP адрес" type="text" name="attribute-ip"/>
                                             <input class="element-attr-name form-control attr-id" type="text" name="attrubute-id"/> 
                                             <input type="submit" class="btn btn-success create-val-attr-element" data-dismiss="modal" aria-label="Close" onclick="createAttributeValue(event, id)" value="Создать атрибут">
                                         </div>
@@ -257,32 +258,32 @@
 
                                         <div class="input-create-attr-element">
                                             <span class="span-attribute">Название атрибута</span>
-                                            <input class="element-attr-name form-control" placeholder="Название Атрибута" type="text" name="attribute-name"/>
+                                            <input class="element-attr-name form-control clear-input" placeholder="Название Атрибута" type="text" name="attribute-name"/>
                                             <span class="span-attribute">Описание Атрибута</span>
-                                            <input class="element-attr-name form-control" placeholder="Описание" type="text" name="description"/>
+                                            <input class="element-attr-name form-control clear-input" placeholder="Описание" type="text" name="description"/>
                                             <span class="span-attribute">Значение Атрибута (Целое число)</span>
-                                            <input class="element-attr-name form-control" placeholder="Номинальное значение" type="number" name="number-attribute"/> 
+                                            <input class="element-attr-name form-control clear-input" placeholder="Номинальное значение" type="number" name="number-attribute"/> 
                                             <span class="span-attribute">Значение Атрибута (Дробное число - точность 2 после запятой)</span>
-                                            <input class="element-attr-name form-control" placeholder="Номинальное значение" type="number" name="double-2"/> 
+                                            <input class="element-attr-name form-control clear-input" placeholder="Номинальное значение" type="number" name="double-2"/> 
                                             <span class="span-attribute">Значение Атрибута (Дробное число - точность 15 после запятой)</span>
-                                            <input class="element-attr-name form-control" placeholder="Номинальное значение" type="number" name="double-15"/> 
+                                            <input class="element-attr-name form-control clear-input" placeholder="Номинальное значение" type="number" name="double-15"/> 
                                             <span class="span-attribute">Время начала</span> 
-                                            <input class="element-attr-name form-control" placeholder="Время" type="time" name="time-first"/> 
+                                            <input class="element-attr-name form-control clear-input" placeholder="Время" type="time" name="time-first"/> 
                                             <span class="span-attribute">Время окончания</span> 
-                                            <input class="element-attr-name form-control" placeholder="Время" type="time" name="time-second"/> 
+                                            <input class="element-attr-name form-control clear-input" placeholder="Время" type="time" name="time-second"/> 
                                             <span class="span-attribute">Текст Атрибута</span>
-                                            <textarea class="element-attr-name form-control" placeholder="Текст" type="text" name="attribute-text"></textarea>
+                                            <textarea class="element-attr-name form-control clear-input" placeholder="Текст" type="text" name="attribute-text"></textarea>
                                             <span class="span-attribute">Ссылка на источник</span>
-                                            <input class="element-attr-name form-control" placeholder="https://www.source.com" type="text" name="attribute-varchar"/> 
-                                            <input class="element-attr-name form-control file-input" onchange="encodeImage(this)" type="file" name="attribute-file"/> 
+                                            <input class="element-attr-name form-control clear-input" placeholder="https://www.source.com" type="text" name="attribute-varchar"/> 
+                                            <input class="element-attr-name form-control file-input clear-input" onchange="encodeImage(this)" type="file" name="attribute-file"/> 
                                             <a class="link"></a> 
                                             <span class="span-attribute">Да</span> 
-                                            <input class="element-attr-name form-control input-radio-attribute" type="radio" name="attribute-bool" value="1" /> 
+                                            <input class="element-attr-name form-control input-radio-attribute radio-unchecked" type="radio" name="attribute-bool" value="1" /> 
                                             <span class="span-attribute">Нет</span> 
-                                            <input class="element-attr-name form-control input-radio-attribute" type="radio" name="attribute-bool" value="0"/> 
+                                            <input class="element-attr-name form-control input-radio-attribute radio-unchecked" type="radio" name="attribute-bool" value="0"/> 
                                             <span class="span-attribute">Пусто</span> 
-                                            <input class="element-attr-name form-control input-radio-attribute" type="radio" name="attribute-bool" value="" checked/> 
-                                            <input class="element-attr-name form-control" placeholder="IP адрес" type="text" name="attribute-ip"/>
+                                            <input class="element-attr-name form-control input-radio-attribute radio-checked" type="radio" name="attribute-bool" value="" checked/> 
+                                            <input class="element-attr-name form-control clear-input" placeholder="IP адрес" type="text" name="attribute-ip"/>
                                             <input class="element-attr-name form-control attr-id" type="text" name="attrubute-id"/> 
                                             <input type="submit" class="btn btn-success attr-element" data-dismiss="modal" aria-label="Close" onclick="createAttr(event, id)" value="Создать атрибут">
                                         </div>
@@ -316,7 +317,6 @@
             success: (data) => {
                 if(data.length != 0){
                     for(let i = 0; i < data.length; i++){
-                        //console.log(data[i].attribute_img);
                         if(data[i].attribute_img != null){
                             $('#tabl-attr-id-' + data[i].attribute_id).children('.table-attr-img').append('<img src="' + data[i].attribute_img + '" />');    
                         }
@@ -340,31 +340,42 @@
 
     function getAllAttributes(event){
         event.preventDefault();
-        $.ajax({
-            url: "{{ route('admin.get_all_attr') }}",
-            type: 'GET',
-            data: {},
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: (data) => {
-                
-                if(data.length != 0){
-                    for(let i = 0; i < data.length; i++){
-                        let desc = '';
-                        if(data[i].attribute_description != null){
-                            desc = data[i].attribute_description
-                        } else {
-                            desc = '';
+        let td = $('.table-attr').children('td');
+        let disp = $('.table-attr-main').css('display');
+        if(td.length != 0 && disp == 'none'){
+            $('.table-attr-main').show();
+        } else if(td.length == 0 && disp == 'none'){
+            $('.table-attr-main').show();
+            $.ajax({
+                url: "{{ route('admin.get_all_attr') }}",
+                type: 'GET',
+                data: {},
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: (data) => {
+                    
+                    if(data.length != 0){
+                        for(let i = 0; i < data.length; i++){
+                            let desc = '';
+                            if(data[i].attribute_description != null){
+                                desc = data[i].attribute_description
+                            } else {
+                                desc = '';
+                            }
+                            $('.table-attr-main').append('<tr id="tabl-attr-id-' + data[i].id + '" class="table-attr"><td><a onclick="getComplexID(event, ' + data[i].element_id + ')">' + data[i].attribute_name + '</a></td> <td>' + desc + '</td> <td class="table-attr-img"></td>  <td class="table-attr-int"><ul></ul></td>  <td class="table-attr-d2"><ul></ul></td>  <td class="table-attr-d15"><ul></ul></td>  <td class="table-attr-bool"></td>  <td>' + data[i].created_at + '</td>  <td>' + data[i].updated_at + '</td> </tr>');
+                            getAttrVal(data[i].id);
+                            //let complexID = getComplexID(event, data[i].element_id);
+                            //console.log(complexID);
                         }
-                        $('.table-attr-main').append('<tr id="tabl-attr-id-' + data[i].id + '" class="table-attr"><td><a onclick="getComplexID(event, ' + data[i].element_id + ')">' + data[i].attribute_name + '</a></td> <td>' + desc + '</td> <td class="table-attr-img"></td>  <td class="table-attr-int"><ul></ul></td>  <td class="table-attr-d2"><ul></ul></td>  <td class="table-attr-d15"><ul></ul></td>  <td class="table-attr-bool"></td>  <td>' + data[i].created_at + '</td>  <td>' + data[i].updated_at + '</td> </tr>');
-                        getAttrVal(data[i].id);
-                        //let complexID = getComplexID(event, data[i].element_id);
-                        //console.log(complexID);
                     }
                 }
-            }
-        })
+            })
+        } else if(td.length != 0 && disp == 'table'){
+            $('.table-attr-main').hide();
+        }
+
+
     }   
    
     function attrTabeShow(event, elementID, element){
@@ -408,21 +419,25 @@
             }
         })
     }
+
     function createInputAttr(attrID, elementID){
         $('.create-val-attr-element').attr('id', 'crt-attr-' + elementID);
         $('.attr-id').attr('value', attrID);
     }
+
     function editInputAttr(attrID, elementID){
         let newAttrID = attrID.replace('e-at-', '');
         $('.edit-attr-btn').attr('id', 'edit-attr-' + newAttrID);
         $('.input-edit-attr').attr('id', 'el-ed-art-' + elementID);
     }
+
     function editValInputAttr(attrID, elementID, id){
         let valAttrID = attrID.replace('e-v-at-', '');
         $('.attr-id').attr('value', id);
         $('.edit-val-attr-element').attr('id', 'e-val-at-' + valAttrID);
         $('.input-edit-value-attr').attr('id', 'el-val-ed-at-' + elementID);
     }
+
     function editAttr(event, attrID){
         event.preventDefault();
         attrID = attrID.replace('edit-attr-', '');
@@ -447,6 +462,7 @@
             }
         })
     }
+
     function editValueAttr(event, attrID){
         event.preventDefault();
         attrID = attrID.replace('e-val-at-', '');   
@@ -491,6 +507,7 @@
             }
         })
     }
+
     function getComplexID(event, elementID){
         event.preventDefault();
         $.ajax({
@@ -511,6 +528,7 @@
             }
         })
     }
+
     function createAttr(event, elementID){
         let child = $('.input-create-attr-element').children('input');
         let inputArray = new Array();
@@ -552,6 +570,7 @@
             }
         })
     }
+
     function createAttributeValue(event, elID){
         console.log();
         event.preventDefault();
@@ -596,10 +615,12 @@
             }
         })
     }
+
     function appendBigImg(el){
         let img = $(el).children('img');
         $('.big-img-attr').empty().append('<img class="big-img" src="' + img[0].currentSrc + '" />');
     }
+
     function attributeData(event, elementID){
         $.ajax({
             url: "{{ route('admin.get_attr') }}",
@@ -669,7 +690,7 @@
                                     if(data[i][j]['attribute_bool'] == 1){
                                         $('#table-bool-' + data[i]['attribute_id']).append('<li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-bool-true"> <i class="fa fa-check-circle" aria-hidden="true"></i>  <i title="Изменить значение атрибута" id="e-v-at-' + data[i]['attribute_id'] + '" onclick="editValInputAttr(id, ' + elementID + ', ' + data[i][j]['id'] + ')" data-toggle="modal" data-target=".bd-attr-edit-value-modal-lg" class="fa fa-pencil edit-attr-value" aria-hidden="true"></i><i title="Удалить значение атрибута " id="r-at-' + data[i][j]['id'] + '" onclick="removeInputAttr(id, ' + data[i]['element_id'] + ')" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr" aria-hidden="true"></i></li>');
                                     } else if(data[i][j]['attribute_bool'] == 0){
-                                        $('#table-bool-' + data[i]['attribute_id']).append('<i title="Изменить значение атрибута" id="e-v-at-' + data[i]['attribute_id'] + '" onclick="editValInputAttr(id, ' + elementID + ', ' + data[i][j]['id'] + ')" data-toggle="modal" data-target=".bd-attr-edit-value-modal-lg" class="fa fa-pencil edit-attr-value-table" aria-hidden="true"></i><i title="Удалить значение атрибута " id="r-at-' + data[i][j]['id'] + '" onclick="removeInputAttr(id, ' + data[i]['element_id'] + ')" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr-table" aria-hidden="true"></i><li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-bool-false"> <i class="fa fa-times-circle" aria-hidden="true"></i></li>');
+                                        $('#table-bool-' + data[i]['attribute_id']).append('<i title="Изменить значение атрибута" id="e-v-at-' + data[i]['attribute_id'] + '" onclick="editValInputAttr(id, ' + elementID + ', ' + data[i][j]['id'] + ')" data-toggle="modal" data-target=".bd-attr-edit-value-modal-lg" class="fa fa-pencil edit-attr-value" aria-hidden="true"></i><i title="Удалить значение атрибута " id="r-at-' + data[i][j]['id'] + '" onclick="removeInputAttr(id, ' + data[i]['element_id'] + ')" data-toggle="modal" data-target=".bd-attr-remove-modal-lg" class="fa fa-times remove-attr" aria-hidden="true"></i><li title="Дата создания: ' + data[i][j]['created_at'] + ' Дата изменения: ' + data[i][j]['updated_at'] + '" class="attribute-bool-false"> <i class="fa fa-times-circle" aria-hidden="true"></i></li>');
                                     }  
                                 }
                                 if(data[i][j]['attribute_IP'] != null){
@@ -703,6 +724,7 @@
             }
         }) 
     }
+
     function editElement(event, elementID){
         event.preventDefault();
         elementID = Number(elementID);
@@ -728,6 +750,7 @@
             }
         })
     }
+
     function showAllElements(event, elementID){
         event.preventDefault();
         elementID = Number(elementID);
@@ -764,6 +787,7 @@
             }
         })
     }
+
     function showElements(event, elementID){
         event.preventDefault();
         elementID = Number(elementID);
@@ -781,6 +805,7 @@
             }
         })
     }
+    
     function getRemoveElements(event, elementID){
         event.preventDefault();
         elementID = Number(elementID);
@@ -822,6 +847,7 @@
         })
         
     }
+
     function removeElement(event, elementID){
         event.preventDefault();
         elementID = Number(elementID);
@@ -839,6 +865,7 @@
             }
         }) 
     }
+
     function createNote(event, complexID){
         event.preventDefault();
         let elementNameValue;
@@ -897,7 +924,7 @@
                         for(let i = 0; i < data.length; i++){
                             let children = $('#element-id-' + parentID).children();
                             let del = "'";
-                            $('#element-id-' + parentID).append('<li id="el-id-' + data[i].id + '"><a onclick="elementData(event, ' + data[i].id + ')">' + data[i].element_name + '</a> <i title="Удалить элемент ' + data[i].element_name + '" onclick="getRemoveElements(event, ' + data[i].id + ')"  class="fa fa-times remove-element" aria-hidden="true"  ></i> <i title="Редактировать раздел ' + data[i].element_name + '" onclick="inputEditID(' + data[i].id + ')" class="fa fa-pencil-square-o edit-element" aria-hidden="true" data-toggle="modal" data-target=".bd-edit-modal-lg"></i> <i title="Создать дочерний элемент для ' + data[i].element_name + '"  onclick="inputID(' + del + data[i].complex_id + del + ')" class="fa fa-sun-o new-element" aria-hidden="true" data-toggle="modal" data-target=".bd-child-modal-lg"></i> <i data-toggle="modal" data-target=".bd-attr-modal-lg" class="fa fa-puzzle-piece new-attribute" aria-hidden="true" onclick="inputAttrID(' + data[i].id + ')" title="Создать атрибут"></i> <ul class="attributes" id="attr-el-' + data[i].id + '"></ul> <ul class="elements" id="element-id-' + data[i].id + '"></ul></li>');
+                            $('#element-id-' + parentID).append('<li id="el-id-' + data[i].id + '"><a onclick="elementData(event, ' + data[i].id + ')">' + data[i].element_name + '</a> <i title="Удалить элемент ' + data[i].element_name + '" onclick="getRemoveElements(event, ' + data[i].id + ')"  class="fa fa-times remove-element" aria-hidden="true"  ></i> <i title="Редактировать раздел ' + data[i].element_name + '" onclick="inputEditID(' + data[i].id + ')" class="fa fa-pencil-square-o edit-element" aria-hidden="true" data-toggle="modal" data-target=".bd-edit-modal-lg"></i> <i title="Создать элемент для ' + data[i].element_name + '"  onclick="inputID(' + del + data[i].complex_id + del + ')" class="fa fa-sun-o new-element" aria-hidden="true" data-toggle="modal" data-target=".bd-child-modal-lg"></i> <i data-toggle="modal" data-target=".bd-attr-modal-lg" class="fa fa-puzzle-piece new-attribute" aria-hidden="true" onclick="inputAttrID(' + data[i].id + ')" title="Создать атрибут"></i> <ul class="attributes" id="attr-el-' + data[i].id + '"></ul> <ul class="elements" id="element-id-' + data[i].id + '"></ul></li>');
                             //attributeData(event, data[i].id);
                         }
                     } else {
@@ -938,7 +965,7 @@
                     for(let i = 0; i < data.length; i++){
                         let children = $('#element-id-' + parentID).children();
                         let del = "'";
-                        $('#element-id-' + parentID).append('<li id="el-id-' + data[i].id + '"><a onclick="elementData(event, ' + data[i].id + ')">' + data[i].element_name + '</a> <i title="Удалить элемент ' + data[i].element_name + '" onclick="getRemoveElements(event, ' + data[i].id + ')"  class="fa fa-times remove-element" aria-hidden="true"  ></i> <i title="Редактировать раздел ' + data[i].element_name + '" onclick="inputEditID(' + data[i].id + ')" class="fa fa-pencil-square-o edit-element" aria-hidden="true" data-toggle="modal" data-target=".bd-edit-modal-lg"></i> <i title="Создать дочерний элемент для ' + data[i].element_name + '"  onclick="inputID(' + del + data[i].complex_id + del + ')" class="fa fa-sun-o new-element" aria-hidden="true" data-toggle="modal" data-target=".bd-child-modal-lg"></i> <i data-toggle="modal" data-target=".bd-attr-modal-lg" class="fa fa-puzzle-piece new-attribute" aria-hidden="true" onclick="inputAttrID(' + data[i].id + ')" title="Создать атрибут"></i> <ul class="attributes" id="attr-el-' + data[i].id + '"></ul> <ul class="elements" id="element-id-' + data[i].id + '"></ul></li>');
+                        $('#element-id-' + parentID).append('<li id="el-id-' + data[i].id + '"><a onclick="elementData(event, ' + data[i].id + ')">' + data[i].element_name + '</a> <i title="Удалить элемент ' + data[i].element_name + '" onclick="getRemoveElements(event, ' + data[i].id + ')"  class="fa fa-times remove-element" aria-hidden="true"  ></i> <i title="Редактировать раздел ' + data[i].element_name + '" onclick="inputEditID(' + data[i].id + ')" class="fa fa-pencil-square-o edit-element" aria-hidden="true" data-toggle="modal" data-target=".bd-edit-modal-lg"></i> <i title="Создать элемент для ' + data[i].element_name + '"  onclick="inputID(' + del + data[i].complex_id + del + ')" class="fa fa-sun-o new-element" aria-hidden="true" data-toggle="modal" data-target=".bd-child-modal-lg"></i> <i data-toggle="modal" data-target=".bd-attr-modal-lg" class="fa fa-puzzle-piece new-attribute" aria-hidden="true" onclick="inputAttrID(' + data[i].id + ')" title="Создать атрибут"></i> <ul class="attributes" id="attr-el-' + data[i].id + '"></ul> <ul class="elements" id="element-id-' + data[i].id + '"></ul></li>');
                         //attributeData(event, data[i].id);
                     }
                 } else {
@@ -949,17 +976,30 @@
         })
     }
 
+    function emptyForms(){
+        $('.clear-input').val('');
+        $('.radio-checked').attr('checked', 'checked');
+        $('.radio-checked').trigger('click');
+        $('.link').attr('href', '');
+        $('.link-edit').attr('href', '');
+    }
 
     function inputID(complexID){
+        emptyForms();
         $('.create-child').attr('id', complexID);
     }
+
     function inputEditID(elementID){
+        emptyForms();
         $('.edit-element').attr('id', elementID);
     }
+
     function inputAttrID(elementID){
+        emptyForms();
         $('.attr-element').attr('id', elementID);
         $('.attr-id').attr('value', elementID)
     }
+
     function encodeImageEdit(element) {
         var file = element.files[0];
         var reader = new FileReader();
@@ -968,6 +1008,7 @@
         }
         reader.readAsDataURL(file);
     }
+
     function encodeImage(element) {
         var file = element.files[0];
         var reader = new FileReader();
@@ -976,6 +1017,7 @@
         }
         reader.readAsDataURL(file);
     }
+
 </script>
 
 @endsection

@@ -67,7 +67,16 @@ class DashboardController extends Controller
             if (Auth::user()){
                 $element_id = $request->element_id;
                 $user_id = Auth::user()->id;
-                //$result = DB::table('elements')->where('id', $element_id)->where('user_id',  $user_id)->delete();
+                $attributes = DB::table('attributes')->where([
+                    ['element_id', '=', $request->element_id],
+                    ['user_id', '=', $user_id],
+                ])->get();
+                $arr = [];
+                foreach($attributes as $attr){
+                    DB::table('attributes_value')->where('attribute_id', $attr->id)->where('user_id',  $user_id)->delete();
+                }
+                DB::table('attributes')->where('element_id', $element_id)->where('user_id',  $user_id)->delete();
+                $result = DB::table('elements')->where('id', $element_id)->where('user_id',  $user_id)->delete();
                 return $result;
             }
         }
@@ -381,7 +390,7 @@ class DashboardController extends Controller
                 $attributes_values = null;
                 for($i = 0; $i < count($attributes); $i++){
                     $attributes_values[$i] = $attributes[$i];
-                    $attributes_values['length'] = $i;
+                    $attributes_values['length'] = $i + 1;
                 }
 
                 return $attributes_values;

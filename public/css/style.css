@@ -649,3 +649,7 @@ li{
   margin: auto;
 }
 
+.table-attr-main{
+  display: none;
+}
+
