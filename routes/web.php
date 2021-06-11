@@ -26,7 +26,6 @@ Auth::routes();
 Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['auth']], function(){
     Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/index', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.index');
-
     Route::post('/create_note', [App\Http\Controllers\Admin\DashboardController::class, 'create_note'])->name('admin.create_note');
     Route::get('/element_data', [App\Http\Controllers\Admin\DashboardController::class, 'element_data'])->name('admin.element_data');
     Route::post('/remove_element', [App\Http\Controllers\Admin\DashboardController::class, 'remove_element'])->name('admin.remove_element');
@@ -46,6 +45,8 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['aut
     Route::get('/search_attributes_double', [App\Http\Controllers\Admin\DashboardController::class, 'search_attributes_double'])->name('admin.search_attributes_double');
     Route::get('/get_all_attr', [App\Http\Controllers\Admin\DashboardController::class, 'get_all_attr'])->name('admin.get_all_attr');
     Route::get('/get_attr_val', [App\Http\Controllers\Admin\DashboardController::class, 'get_attr_val'])->name('admin.get_attr_val');
+    Route::get('/get_elements', [App\Http\Controllers\Admin\DashboardController::class, 'get_elements'])->name('admin.get_elements');
+    Route::post('/move_element', [App\Http\Controllers\Admin\DashboardController::class, 'move_element'])->name('admin.move_element');
      
       
 });

@@ -172,10 +172,8 @@ li{
 
   .dash-vertical-menu li{
     list-style: none;
-    font-family: Oswald, sans-serif;
-    font-size: 12px;
+    color: #777373;
   }
-
 
   .brand-text{
     color: rgb(64 191 168 / 90%) !important;
@@ -183,13 +181,13 @@ li{
   }
 
   .remove-element{
-    margin-left: 7px;
+    margin-left: 10px;
     color: #ff9d5754;
     cursor: pointer;
   }
 
   .edit-element{
-    margin-left: 7px;
+    margin-left: 10px;
     color: #c2a9ff99;
     cursor: pointer;
   }
@@ -200,13 +198,19 @@ li{
 
   .new-element{
     color: #ab236852;
-    margin-left: 7px;
+    margin-left: 10px;
     cursor: pointer;
   }
 
   .new-attribute{
     color: #ea6a9966;
-    margin-left: 7px;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+
+  .move-element{
+    color: #2b945052;
+    margin-left: 10px;
     cursor: pointer;
   }
 
@@ -516,11 +520,11 @@ li{
   color: #ab8d8dc2;
 }
 
-.attribute-bool-true i{
+.attribute-bool-true i, .bool-icon-true{
   color: #18b17f7d;
 }
 
-.attribute-bool-false i{
+.attribute-bool-false i, .bool-icon-false{
   color: #c72f2885;
 }
 
@@ -631,16 +635,18 @@ li{
 
 .table-attr th{
   border: 1px solid #2f8492d1;
-  padding: 5px;
+  padding: 2px 10px 2px 10px;
   color: #986260eb;
   cursor: pointer;
+  line-height: 10px;
 }
 
 .table-attr td{
   border: 1px solid #2f8492d1;
-  padding: 5px;
+  padding: 2px 10px 2px 10px;
   color: #2f8492d1;
   cursor: pointer;
+  line-height: 10px;
 }
 
 .table-attr-img img{
@@ -651,5 +657,22 @@ li{
 
 .table-attr-main{
   display: none;
+}
+
+.btn-select{
+  margin-left: 0px; 
+}
+
+.input-group {
+  width: 95% !important;
+}
+
+.custom-select option{
+  color: #791f61a6;
+}
+
+.chart-style{
+  color: #e086467a;
+  padding: 5px 5px 5px 0px;
 }
 

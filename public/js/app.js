@@ -2543,55 +2543,80 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+//   function getAttributesForChart(type){
+//     let route = "admin/search_attributes_" + type;
+//     $.ajax({
+//       url: route,
+//       type: 'GET',
+//       data: {},
+//       headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+//       success: (data) => {
+//         let arr = new Array();
+//           if(data.length != null){
+//             let count = 0;
+//             for(let i = 0; i < data.length; i++){
+//               for(let j = 0; j < data[i].length; j++){
+//                 arr[count] = data[i][j].attribute_double;
+//                 count++;
+//               }
+//             }
+//             //console.log(arr);
+//             showChart(arr);
+//           }
+//       }
+//     })
+//   }
+//   //getAttributesForChart('double');
 
-function getAttributesForChart(type) {
-  var route = "admin/search_attributes_" + type;
-  $.ajax({
-    url: route,
-    type: 'GET',
-    data: {},
-    headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+ //   function showChart(attrDouble){
+//     var ctx = document.getElementById('myChart');
+//     var myChart = new Chart(ctx, {
+//         type: 'line',
+//         data: {
+//             labels: attrDouble,
+//           datasets: [
+//             {
+//               label: 'Double',
+//               data: attrDouble,
+//               borderColor: 'rgba(210, 85, 66, 1)',
+//               backgroundColor: 'rgba(66, 162, 235, 0.2)',
+//             }
+//           ]
+//         },
+//         options: {}
+//     });
+//   }
+
+var labels = ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange', 'Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'];
+var data = [];
+var backgroundColor = [];
+var borderColor = [];
+var ctx = document.getElementById('myChart').getContext('2d'); // let labels =  ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange', 'Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'];
+
+var myChart = new chart_js_auto__WEBPACK_IMPORTED_MODULE_0__.default(ctx, {
+  type: 'bar',
+  data: {
+    "function": function _function(labels) {
+      return {
+        labels: labels
+      };
     },
-    success: function success(data) {
-      var arr = new Array();
-
-      if (data.length != null) {
-        var count = 0;
-
-        for (var i = 0; i < data.length; i++) {
-          for (var j = 0; j < data[i].length; j++) {
-            arr[count] = data[i][j].attribute_double;
-            count++;
-          }
-        } //console.log(arr);
-
-
-        showChart(arr);
+    datasets: [{
+      label: '# of Votes',
+      data: [12, 19, 3, 5, 2, 3, 12, 19, 3, 5, 2, 3],
+      backgroundColor: ['red', 'blue', 'purple', 'green', 'yellow', 'pink', 'red', 'blue', 'purple', 'green', 'yellow', 'pink'],
+      borderColor: ['red', 'blue', 'purple', 'green', 'yellow', 'pink', 'red', 'blue', 'purple', 'green', 'yellow', 'pink'],
+      borderWidth: 1
+    }]
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true
       }
     }
-  });
-} //getAttributesForChart('double');
-
-
-
-
-function showChart(attrDouble) {
-  var ctx = document.getElementById('myChart');
-  var myChart = new chart_js_auto__WEBPACK_IMPORTED_MODULE_0__.default(ctx, {
-    type: 'line',
-    data: {
-      labels: attrDouble,
-      datasets: [{
-        label: 'Double',
-        data: attrDouble,
-        borderColor: 'rgba(210, 85, 66, 1)',
-        backgroundColor: 'rgba(66, 162, 235, 0.2)'
-      }]
-    },
-    options: {}
-  });
-}
+  }
+});
 
 /***/ }),
 

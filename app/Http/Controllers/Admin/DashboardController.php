@@ -370,13 +370,17 @@ class DashboardController extends Controller
                     ['user_id', '=', $user_id],
                 ])->get();
 
+                foreach($attributes as $item){
+                    $element = DB::table('elements')->where([
+                        ['id', '=', $item->element_id],
+                    ])->get();
+                    $item->element_name = $element[0]->element_name; 
+                }
+
                 return $attributes;
             }
         }
     }
-
-
-
 
     public function get_attr_val(Request $request){
         if($request->ajax()){
@@ -397,6 +401,50 @@ class DashboardController extends Controller
             }
         } 
     }
+
+
+    // public function get_elements(Request $request){
+    //     if($request->ajax()){
+    //         if (Auth::user()){
+    //             $user_id = Auth::user()->id;
+    //             $elements = DB::table('elements')->where([
+    //                 ['user_id', '=', $user_id],
+    //             ])->get();
+
+    //             return $elements;
+    //         }
+    //     } 
+    // }
+
+    // public function move_element(Request $request){
+    //     if($request->ajax()){
+    //         if (Auth::user()){
+    //             $user_id = Auth::user()->id;
+    //             $result = DB::update('update elements set complex_id = ? where id = ? and where', [ $complex_id, $id_note ]);
+    //             $element_id = $request->element_id;
+    //             $parent_id = $request->parent_id;
+    //             $complex_id = $request->complex_id;
+    //             $elements = DB::table('elements')->where([
+    //                 ['id', '=', $element_id],
+    //                 ['user_id', '=', $user_id],
+    //             ])->update();
+
+    //             return $result;
+    //         }
+    //     } 
+    // }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }
