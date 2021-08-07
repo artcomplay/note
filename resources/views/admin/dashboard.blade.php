@@ -257,7 +257,7 @@
                                             <span class="span-attribute">Название атрибута</span>
                                             <input class="element-attr-name form-control clear-input" onkeypress="btnEnter(event, 'attr-element')" placeholder="Название Атрибута" type="text" name="attribute-name"/>
                                             <span class="span-attribute">Описание Атрибута</span>
-                                            <input class="element-attr-name form-control clear-input" onkeypress="btnEnter(event, 'attr-element')" placeholder="Описание" type="text" name="description"/>
+                                            <textarea rows="5" class="element-attr-name form-control clear-input" onkeypress="btnEnter(event, 'attr-element')" placeholder="Описание" type="text" name="description"></textarea>
                                             <span class="span-attribute">Значение Атрибута (Целое число)</span>
                                             <input class="element-attr-name form-control clear-input" onkeypress="btnEnter(event, 'attr-element')" placeholder="Номинальное значение" type="number" name="number-attribute"/>
                                             <span class="span-attribute">Значение Атрибута (Дробное число - точность 2 после запятой)</span>
@@ -470,6 +470,10 @@
         let arEdit = $('.input-edit-attr').children('input.form-control');
         let arEditEl = $('.input-edit-attr').attr('id');
         let elementID = arEditEl.replace('el-ed-art-', '');
+        // let attrName = arEdit[0].value;
+        // let attrDesc = arEdit[1].value;
+        // console.log(attrName);
+        // console.log(attrDesc);
         $.ajax({
             url: "{{ route('admin.edit_attr') }}",
             type: 'POST',
